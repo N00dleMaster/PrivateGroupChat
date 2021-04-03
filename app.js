@@ -1,8 +1,10 @@
-
-const app = require("express")();           // Require express to serve our application
+const express = require("express");         // Require express
+const app = express();                      // execute express constructor to get the app object
 const http = require("http").Server(app);   // Require http, and pass express instance to it.
 const io = require("socket.io")(http);      // Require socket.io, pass http server to it
                                             //   --> Socket.io works by being attached onto an http server instance
+
+app.use(express.static("front-end"));
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/front-end/index.html");
@@ -16,7 +18,7 @@ io.on("connection", socket => {
     console.log("A wild user appeared! ");
 
     // This "chat_message" event is custom. We've named it ourself. Check out
-    // index.html and go down to the script tag. Submitting the form triggers
+    // index.js and go down to the script tag. Submitting the form triggers
     // a "chat_message" event which we define. This event is a socket event,
     // and is handled here.
     socket.on("chat_message", (msg) => {
