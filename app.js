@@ -6,6 +6,7 @@ const io = require("socket.io")(http);      // Require socket.io, pass http serv
 
 app.use(express.static("front-end"));
 
+
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/front-end/index.html");
 })
@@ -18,13 +19,13 @@ io.on("connection", socket => {
     console.log("A wild user appeared! ");
 
     // This "chat_message" event is custom. We've named it ourself. Check out
-    // index.js and go down to the script tag. Submitting the form triggers
+    // index.js. Submitting the form triggers
     // a "chat_message" event which we define. This event is a socket event,
     // and is handled here.
-    socket.on("chat_message", (msg) => {
+    socket.on("chat_message", (msg, author) => {
         // io.emit() emits information to *all* the connected sockets. This is then
         // handled *again* on the client side. (see index.html)
-        io.emit("chat_message", msg);
+        io.emit("chat_message", msg, author);
     });
 
     // The disconnect event is built into socket
