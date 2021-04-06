@@ -1,4 +1,4 @@
-
+// This is the client-side socket connection we need to establish
 const socket = io.connect("http://localhost:8080");
 
 const username = window.prompt("Enter a username:");
@@ -6,6 +6,17 @@ const username = window.prompt("Enter a username:");
 const messages = document.getElementById("messages");
 const form = document.getElementById('form');
 const input = document.getElementById('input');
+
+
+// ============= DOM POPULATOR ==============
+let db = [
+    {"author": "NoodleMaster",
+     "message": "Hellow world"},
+     
+    {"author": "NoodleBoi",
+    "message": "Did you seriously just misspell the word, 'Hello'?"}
+]
+console.log(db[0].author);
 
 
 // ============ EVENT LISTENERS =============
@@ -19,11 +30,11 @@ form.addEventListener('submit', function(e) {
 });
 
 
-
 // ============= SOCKET.IO EVENTS ==================
 // See the app.js file for the "chat_message" event
-socket.on("chat_message", (msg, author) => {createMsg(msg, author)});
-
+socket.on("chat_message", (msg, author) => {
+    createMsg(msg, author);
+});
 
 
 // ============== MISC EVENTS =================

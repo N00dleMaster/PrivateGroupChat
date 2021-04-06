@@ -9,8 +9,8 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
+
         <ul id="messages">
-            <%= db.NoodleMaster %>
             <!-- We'll be appending messages here using code -->
         </ul>
 
@@ -20,8 +20,27 @@
         </form>
 
 
+
+
         <!-- This script tag is needed in order to use socket.js on the client-side -->
         <script src="/socket.io/socket.io.js"></script>
+
+        <!-- Since EJS looks kind of ugly, we're passing all the necessary info
+        into our index.js file as follows, in this hack-y way. -->
+        <script>
+            const dataBase = [];
+            let newEntry;
+            <%for(let i=0; i<db.length; i++) { %>
+                newEntry = {
+                    "author": "<%= db[i].author %>",
+                    "message": "<%= db[i].message %>"
+                };
+                dataBase.push(newEntry);
+            <%} %> 
+            console.log(dataBase);
+            // All the data we have in this script tag is available now, in our index.js.
+        </script>
+
         <!-- This is the actual messing about we do using the socket.io capabilities -->
         <script src="index.js"></script>
     </body>

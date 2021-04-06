@@ -16,10 +16,13 @@ app.set("views", path.join(__dirname, "front-end"));
 app.set("view engine", "ejs");
 
 // Our temporary "database"
-let db = {
-    "NoodleMaster" : "Hellow world",
-    "NoodleBoi" : "Did you seriously misspell 'Hello'?"
-}
+let db = [
+    {"author": "NoodleMaster",
+     "message": "Hellow world"},
+     
+    {"author": "NoodleBoi",
+    "message": "Did you seriously just misspell the word, 'Hello'?"}
+]
 
 
 app.get("/", (req, res) => {
