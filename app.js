@@ -4,7 +4,15 @@ const http = require("http").Server(app);   // Require http, and pass express in
 const io = require("socket.io")(http);      // Require socket.io, pass http server to it
                                             //   --> Socket.io works by being attached onto an http server instance
 
+// express.static() sets up any "static" files we'll need to serve.
+// Our front-end html, css, and scripts are all static resources, so this is a kewlio.
 app.use(express.static("front-end"));
+
+// Our temporary "database"
+let db = {
+    "NoodleMaster" : "Hellow world",
+    "NoodleBoi" : "Did you seriously misspell, 'Hello'?"
+}
 
 
 app.get("/", (req, res) => {
