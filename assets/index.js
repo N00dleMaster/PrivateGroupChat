@@ -9,14 +9,11 @@ const input = document.getElementById('input');
 
 
 // ============= DOM POPULATOR ==============
-let db = [
-    {"author": "NoodleMaster",
-     "message": "Hellow world"},
-     
-    {"author": "NoodleBoi",
-    "message": "Did you seriously just misspell the word, 'Hello'?"}
-]
-console.log(db[0].author);
+// We get the variable "dataBase" from the 
+// <script> tags in our index.ejs. Very hack-y
+for(let i=0; i<dataBase.length; i++) {
+    createMsg(dataBase[i].message, dataBase[i].author);
+}
 
 
 // ============ EVENT LISTENERS =============

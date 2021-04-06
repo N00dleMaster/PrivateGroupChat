@@ -19,7 +19,7 @@ app.set("view engine", "ejs");
 let db = [
     {"author": "NoodleMaster",
      "message": "Hellow world"},
-     
+
     {"author": "NoodleBoi",
     "message": "Did you seriously just misspell the word, 'Hello'?"}
 ]
@@ -44,6 +44,12 @@ io.on("connection", socket => {
         // io.emit() emits information to *all* the connected sockets. This is then
         // handled *again* on the client side. (see index.html)
         io.emit("chat_message", msg, author);
+        // Because socket.io also has this handler on the backend, we can append the new
+        // message to our database!!!! Epic.
+        db.push({
+            "author": author,
+            "message": msg
+        })
     });
 
     // The disconnect event is built into socket
