@@ -6,17 +6,17 @@ const io = require("socket.io")(http);      // Require socket.io, pass http serv
 
 // express.static() sets up any "static" files we'll need to serve.
 // Our front-end html, css, and scripts are all static resources, so this is a kewlio.
-app.use(express.static("front-end"));
+app.set("view engine", "ejs");
 
 // Our temporary "database"
 let db = {
     "NoodleMaster" : "Hellow world",
-    "NoodleBoi" : "Did you seriously misspell, 'Hello'?"
+    "NoodleBoi" : "Did you seriously misspell 'Hello'?"
 }
 
 
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/front-end/index.html");
+    res.render(path.join(__dirname, "front-end", "index.html"), {db});
 })
 
 

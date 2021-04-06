@@ -7,6 +7,9 @@ const messages = document.getElementById("messages");
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 
+// ============ DOM POPULATOR ===============
+console.log(db);
+
 // ============ EVENT LISTENERS =============
 form.addEventListener('submit', function(e) {
     e.preventDefault(); // Prevents the form from reloading page
