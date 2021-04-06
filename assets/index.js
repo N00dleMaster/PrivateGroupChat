@@ -19,11 +19,17 @@ form.addEventListener('submit', function(e) {
 });
 
 
+
 // ============= SOCKET.IO EVENTS ==================
 // See the app.js file for the "chat_message" event
-socket.on("chat_message", (msg, author) => {
+socket.on("chat_message", (msg, author) => {createMsg(msg, author)});
+
+
+
+// ============== MISC EVENTS =================
+function createMsg(msg,author) {
     // Create new element, append to ul
     const newMsg = document.createElement("li");
     newMsg.innerText = author + ": " + msg;
     messages.appendChild(newMsg);
-});
+}

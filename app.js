@@ -9,6 +9,9 @@ const io = require("socket.io")(http);      // Require socket.io, pass http serv
 
 // express.static() sets up any "static" files we'll need to serve.
 // Our front-end html, css, and scripts are all static resources, so this is a kewlio.
+app.use(express.static(path.join(__dirname, "assets")));
+
+// The "views" folder is the folder where we store our ejs templates
 app.set("views", path.join(__dirname, "front-end"));
 app.set("view engine", "ejs");
 
