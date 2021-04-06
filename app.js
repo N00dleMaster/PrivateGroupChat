@@ -1,3 +1,6 @@
+
+const path = require("path");
+
 const express = require("express");         // Require express
 const app = express();                      // execute express constructor to get the app object
 const http = require("http").Server(app);   // Require http, and pass express instance to it.
@@ -6,6 +9,7 @@ const io = require("socket.io")(http);      // Require socket.io, pass http serv
 
 // express.static() sets up any "static" files we'll need to serve.
 // Our front-end html, css, and scripts are all static resources, so this is a kewlio.
+app.set("views", path.join(__dirname, "front-end"));
 app.set("view engine", "ejs");
 
 // Our temporary "database"
@@ -16,7 +20,7 @@ let db = {
 
 
 app.get("/", (req, res) => {
-    res.render(path.join(__dirname, "front-end", "index.html"), {db});
+    res.render(path.join(__dirname, "front-end", "index.ejs"), {db: db});
 })
 
 

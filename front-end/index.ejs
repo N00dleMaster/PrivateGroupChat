@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Private Chat</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <ul id="messages">
+            <%= db %>
+            <!-- We'll be appending messages here using code -->
+        </ul>
+
+        <form id="form" action="">
+            <input id="input" autocomplete="off"/>
+            <button>Send</button>
+        </form>
+
+
+        <!-- This script tag is needed in order to use socket.js on the client-side -->
+        <script src="/socket.io/socket.io.js"></script>
+        <!-- This is the actual messing about we do using the socket.io capabilities -->
+        <script src="index.js"></script>
+    </body>
+</html>
