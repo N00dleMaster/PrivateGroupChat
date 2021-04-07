@@ -1,8 +1,6 @@
 // This is the client-side socket connection we need to establish
 const socket = io.connect("http://localhost:8080");
 
-const username = window.prompt("Enter a username:");
-
 const messages = document.getElementById("messages");
 const form = document.getElementById('form');
 const input = document.getElementById('input');
@@ -26,6 +24,8 @@ form.addEventListener('submit', function(e) {
     }
 });
 
+// temporary asking of a username
+const username = window.prompt("Enter a username:");
 
 // ============= SOCKET.IO EVENTS ==================
 // See the app.js file for the "chat_message" event

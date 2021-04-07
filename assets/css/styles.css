@@ -1,0 +1,45 @@
+/*Colour palletes
+    #0B090A
+    #161A1D
+    #660708
+    #A4161A
+    #ba181b
+*/
+
+
+body {
+    width: 100vw;
+    height: 100%;
+    overflow-x:hidden;
+    margin: 0;
+    padding: 0;
+}
+
+#messages {
+    width: 100%;
+    background: #c4c4c4;
+}
+
+#form {
+    width: 98%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: fixed;
+    bottom: 1%;
+    left: 1%;
+}
+#input {
+    width:89%;
+    height: 2rem;
+    border-radius: 1rem 0 0 1rem;
+    border: 3px solid #660708;
+    border-left: none;
+}
+#send {
+    border-radius: 0 1rem 1rem 0;
+    width: 9%;
+    border: 3px solid #660708;
+    background-color: #A4161A;
+    color: white;
+}
