@@ -38,6 +38,16 @@ socket.on("chat_message", (msg, author) => {
 function createMsg(msg,author) {
     // Create new element, append to ul
     const newMsg = document.createElement("li");
-    newMsg.innerText = author + ": " + msg;
+
+    const authorTitle = document.createElement("p");
+    authorTitle.classList.add("messageAuthor");
+    authorTitle.innerText = author;
+
+    const msgContent = document.createElement("p");
+    msgContent.classList.add("messageContent");
+    msgContent.innerText = msg;
+
+    newMsg.appendChild(authorTitle);
+    newMsg.appendChild(msgContent);
     messages.appendChild(newMsg);
 }
