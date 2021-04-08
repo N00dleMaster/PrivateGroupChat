@@ -25,7 +25,8 @@ form.addEventListener('submit', function(e) {
 });
 
 // temporary asking of a username
-const username = window.prompt("Enter a username:");
+let username = window.prompt("Enter a username:");
+username = (username == "") ? "Unnamed Bum-Bum" : username;
 
 // ============= SOCKET.IO EVENTS ==================
 // See the app.js file for the "chat_message" event

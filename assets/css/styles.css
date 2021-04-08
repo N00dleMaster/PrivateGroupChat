@@ -10,16 +10,31 @@
     src: url(../fonts/ProximaSoft.ttf);
 }
 
+html {
+    width: 100%;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 body {
     background-color: #0B090A;
     font-family: Proxima-Nova;
     color: white;
-    width: 100vw;
-    height: 100%;
+    width: 95%;
+    height: 93vh;
     overflow-x:hidden;
     margin: 0;
     padding: 0;
 }
+body::-webkit-scrollbar{
+    background-color:#161A1D;
+    border-radius: 5px;
+}
+body::-webkit-scrollbar-thumb {
+    background-color:#660708;
+}
+
 
 #messages {
     width: 100%;
@@ -42,20 +57,24 @@ body {
 }
 
 #form {
-    width: 98%;
+    width: 95%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     position: fixed;
     bottom: 1%;
-    left: 1%;
+    left: 2.5%;
 }
 #input {
     width:89%;
-    height: 2rem;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    background-color:#A4161A;
+    color: white;
+    box-sizing: border-box;
     border-radius: 1rem 0 0 1rem;
     border: 3px solid #660708;
-    border-left: none;
+    border-right: none;
 }
 #send {
     border-radius: 0 1rem 1rem 0;
