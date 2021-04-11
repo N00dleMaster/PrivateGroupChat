@@ -1,6 +1,8 @@
 
 const path = require("path");
 
+const { Pool } = require("pg");             // Require PostGres (sql thingy)
+
 const express = require("express");         // Require express
 const app = express();                      // execute express constructor to get the app object
 const http = require("http").Server(app);   // Require http, and pass express instance to it.
@@ -15,15 +17,37 @@ app.use(express.static(path.join(__dirname, "assets")));
 app.set("views", path.join(__dirname, "front-end"));
 app.set("view engine", "ejs");
 
-// Our temporary "database"
-let db = [
-    {"author": "NoodleMaster",
-     "message": "Hellow world"},
+// // Our temporary "database"
+// let db = [
+//     {"author": "NoodleMaster",
+//      "message": "Hellow world"},
 
-    {"author": "NoodleBoi",
-    "message": "Did you seriously just misspell the word, 'Hello'?"}
-]
+//     {"author": "NoodleBoi",
+//     "message": "Did you seriously just misspell the word, 'Hello'?"}
+// ]
 
+// ESTABLISH CONNECTION
+const client = new Pool({
+    user: "postgres",
+    host: "localhost",
+    database: "messages",
+    password: "postgres",
+    port:5432
+});
+client.connect();
+
+const query = "SELECT * FROM messages";
+
+client.query(query)
+      .then(res => {
+          console.log(res.rows);
+      })
+      .catch(err => {
+          console.log(err);
+      })
+      .finally(() => {
+          client.end();
+      });
 
 app.get("/", (req, res) => {
     res.render(path.join(__dirname, "front-end", "index.ejs"), {db: db});
