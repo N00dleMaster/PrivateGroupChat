@@ -6,14 +6,6 @@ const form = document.getElementById('form');
 const input = document.getElementById('input');
 
 
-// ============= DOM POPULATOR ==============
-// We get the variable "dataBase" from the 
-// <script> tags in our index.ejs. Very hack-y
-// for(let i=0; i<dataBase.length; i++) {
-//     createMsg(dataBase[i].message, dataBase[i].author);
-// }
-
-
 // ============ EVENT LISTENERS =============
 form.addEventListener('submit', function(e) {
     e.preventDefault(); // Prevents the form from reloading page
