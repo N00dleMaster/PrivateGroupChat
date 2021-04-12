@@ -11,6 +11,13 @@
     <body>
         <div id="contentWrapper">
             <ul id="messages">
+                <!-- Loading messages from our DB -->
+                <% allResults.forEach(element => { %>
+                    <li>
+                        <p class="messageAuthor"> <%= element.author %> </p>
+                        <p class="messageContent"> <%= element.message %> </p>
+                    </li>
+                <% }) %>
                 <!-- We'll be appending messages here using code -->
             </ul>
         </div>
@@ -28,11 +35,21 @@
 
         <!-- Since EJS looks kind of ugly, we're passing all the necessary info
         into our index.js file as follows, in this hack-y way. -->
-        <script>
-            const dataBase = <%= db.interact(`SELECT * FROM messages`, () => console.log("Added into db"), () => console.log("error")); %>
-            
-            // All the data we have in this script tag is available now, in our index.js.
-        </script>
+        
+        
+        <!-- const newMsg = document.createElement("li");
+
+        const authorTitle = document.createElement("p");
+        authorTitle.classList.add("messageAuthor");
+        authorTitle.innerText = author;
+
+        const msgContent = document.createElement("p");
+        msgContent.classList.add("messageContent");
+        msgContent.innerText = msg;
+
+        newMsg.appendChild(authorTitle);
+        newMsg.appendChild(msgContent);
+        messages.appendChild(newMsg); -->
 
         <!-- This is the actual messing about we do using the socket.io capabilities -->
         <script src="js/index.js"></script>

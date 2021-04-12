@@ -44,15 +44,15 @@ app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
     let allResults;
-    db.interact("SELECT * FROM messages", (err, res) => {
+    db.interact("SELECT * FROM messages", (err, dbRes) => {
         if(err) {
             console.log("Err at line 49: " + err);
         } else {
             console.log("success");
-            allResults = res.rows;
+            allResults = dbRes.rows;
+            res.render(path.join(__dirname, "front-end", "index.ejs"), {allResults: allResults});
         }
     })
-    res.render(path.join(__dirname, "front-end", "index.ejs"), {allResults: db});
 })
 
 
