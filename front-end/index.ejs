@@ -29,15 +29,8 @@
         <!-- Since EJS looks kind of ugly, we're passing all the necessary info
         into our index.js file as follows, in this hack-y way. -->
         <script>
-            const dataBase = [];
-            let newEntry;
-            <%for(let i=0; i<db.length; i++) { %>
-                newEntry = {
-                    "author": "<%= db[i].author %>",
-                    "message": "<%= db[i].message %>"
-                };
-                dataBase.push(newEntry);
-            <%} %> 
+            const dataBase = <%= db.interact(`SELECT * FROM messages`, () => console.log("Added into db"), () => console.log("error")); %>
+            
             // All the data we have in this script tag is available now, in our index.js.
         </script>
 

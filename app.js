@@ -1,7 +1,7 @@
 
 const path = require("path");
 
-const { Pool } = require("pg");             // Require PostGres (sql thingy)
+const db = require("./db/dbmethods.js");// Require our PostGres methods
 
 const express = require("express");         // Require express
 const app = express();                      // execute express constructor to get the app object
@@ -17,40 +17,42 @@ app.use(express.static(path.join(__dirname, "assets")));
 app.set("views", path.join(__dirname, "front-end"));
 app.set("view engine", "ejs");
 
-// // Our temporary "database"
-// let db = [
-//     {"author": "NoodleMaster",
-//      "message": "Hellow world"},
 
-//     {"author": "NoodleBoi",
-//     "message": "Did you seriously just misspell the word, 'Hello'?"}
-// ]
+// // ESTABLISH CONNECTION WITH DATABASE
+// const client = new Pool({
+//     user: "postgres",
+//     host: "localhost",
+//     database: "messages",
+//     password: "postgres",
+//     port:5432
+// });
+// client.connect();
 
-// ESTABLISH CONNECTION
-const client = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "messages",
-    password: "postgres",
-    port:5432
-});
-client.connect();
+// const query = "SELECT * FROM messages";
 
-const query = "SELECT * FROM messages";
+// client.query(query)
+//       .then(res => {
+//           console.log(res.rows);
+//       })
+//       .catch(err => {
+//           console.log(err);
+//       })
+//       .finally(() => {
+//           client.end();
+//       });
 
-client.query(query)
-      .then(res => {
-          console.log(res.rows);
-      })
-      .catch(err => {
-          console.log(err);
-      })
-      .finally(() => {
-          client.end();
-      });
 
 app.get("/", (req, res) => {
-    res.render(path.join(__dirname, "front-end", "index.ejs"), {db: db});
+    let allResults;
+    db.interact("SELECT * FROM messages", (err, res) => {
+        if(err) {
+            console.log("Err at line 49: " + err);
+        } else {
+            console.log("success");
+            allResults = res.rows;
+        }
+    })
+    res.render(path.join(__dirname, "front-end", "index.ejs"), {allResults: db});
 })
 
 
@@ -70,10 +72,14 @@ io.on("connection", socket => {
         io.emit("chat_message", msg, author);
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
-        db.push({
-            "author": author,
-            "message": msg
-        })
+        db.interact(`INSERT INTO messages (author, message, isPrivate) VALUES ('${author}', '${msg}', FALSE)`,
+                (err, res) => {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        console.log("Added new message:\n" + res.rows);
+                    }
+                });
     });
 
     // The disconnect event is built into socket
