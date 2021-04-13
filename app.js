@@ -10,8 +10,10 @@ const session = require("express-session"); // Express session is built into exp
 const passport = require("passport");       // Passport is what we use for our auth
 const LocalStrategy =                       // Passport-local is the specific method we're using --
     require("passport-local").Strategy;     //      a simple username-password setup.
+const bcrypt = require("bcrypt");           // This allows us to encrypt our passwords
 
 const express = require("express");         // Require express
+const { serializeUser } = require("passport");
 const app = express();                      // execute express constructor to get the app object
 const http = require("http").Server(app);   // Require http, and pass express instance to it.
 
@@ -29,23 +31,88 @@ app.use(express.static(path.join(__dirname, "assets")));
 app.set("views", path.join(__dirname, "front-end"));
 app.set("view engine", "ejs");
 
+// Body-parser is now part of express. We use it like this:
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}));
+
+// Session is how we use login sessions with express. It gives a
+// cookie to the browser so the user doesn't have to login 1000 times
 app.use(session({ 
     secret: process.env.SECRET_SESSION_KEY,
     resave: false,
     saveUninitialized: true
 }));
+// Initializing passport
 app.use(passport.initialize());
 app.use(passport.session());
 
 
+// =================================== PASSPORT STUFF ===================================
+// This is our sign-up "strategy"
+// passport.use("local-signup", new LocalStrategy({
+//         usernameField :     "username",
+//         passwordField :     "password",
+//         passReqToCallback:  true
+//     },
+//     (req, username, password, done) => {
+//         bcrypt.hash(password, 5, (hashErr, hash) =>{
+//             if(hashErr) {
+//                 console.log(hashErr);
+//             } else {
+//                 db.interact("SELECT * FROM users WHERE username = $1", [username],
+//                 (queryError, query) =>{
+//                     if(queryError) {
+//                         console.log(queryError);
+//                         return done(queryError);
+//                     } else if(query.rowCount > 0) {
+//                         console.log("User already exists!");
+//                         return done(null, false);
+//                     } else {
+//                         db.interact("INSERT INTO users (username, password) VALUES($1, $2);",
+//                             [username, hash], (insertionError, insertionResponse) => {
+//                                 if(insertionError) {
+//                                     console.log(insertionError);
+//                                     return done(insertionError);
+//                                 } else {
+//                                     console.log(insertionResponse);
+//                                     return done(null, false);
+//                                 }
+//                         });
+//                     }
+//                 });
+
+//             }
+            
+//         })
+//     }
+// ));
+
+
 // =================================== ROUTES ===================================
 app.get("/", (req, res) => {
-    res.redirect("/signup");;
+    res.redirect("/signup");
 })
 
+// Our sign-up route
 app.get("/signup", (req, res) => {
     res.render(path.join(__dirname, "front-end", "signup.ejs"));
 });
+// We add the user into our db here
+app.post("/signup", (req, res) => {
+    bcrypt.hash(req.body.password, 5, (hashErr, hash) => {
+        if(hashErr) {
+            console.log("Unable to hash password: " + hashErr)
+        } else {
+            db.addUser(username, hash, (success) => {
+				console.log("Insertion status: " + success)
+				res.redirect("/login");
+			});
+        }
+    })
+})
+
 
 app.get("/login", (req, res) => {
     res.render(path.join(__dirname, "front-end", "login.ejs"))
