@@ -50,50 +50,55 @@ app.use(passport.session());
 
 
 // =================================== PASSPORT STUFF ===================================
-// This is our sign-up "strategy"
-// passport.use("local-signup", new LocalStrategy({
-//         usernameField :     "username",
-//         passwordField :     "password",
-//         passReqToCallback:  true
-//     },
-//     (req, username, password, done) => {
-//         bcrypt.hash(password, 5, (hashErr, hash) =>{
-//             if(hashErr) {
-//                 console.log(hashErr);
-//             } else {
-//                 db.interact("SELECT * FROM users WHERE username = $1", [username],
-//                 (queryError, query) =>{
-//                     if(queryError) {
-//                         console.log(queryError);
-//                         return done(queryError);
-//                     } else if(query.rowCount > 0) {
-//                         console.log("User already exists!");
-//                         return done(null, false);
-//                     } else {
-//                         db.interact("INSERT INTO users (username, password) VALUES($1, $2);",
-//                             [username, hash], (insertionError, insertionResponse) => {
-//                                 if(insertionError) {
-//                                     console.log(insertionError);
-//                                     return done(insertionError);
-//                                 } else {
-//                                     console.log(insertionResponse);
-//                                     return done(null, false);
-//                                 }
-//                         });
-//                     }
-//                 });
+// This is our login "strategy"
+passport.use(new LocalStrategy( (username, password, done) => {
+	let user;
+	db.interact("SELECT * FROM users WHERE username = $1", [username], (err, res) => {
+		if(err) {
+			console.log(err);
+			return done(err);
+		} else {
+			console.log("Got user!")
+			user = res.rows[0];
+			bcrypt.compare(password, user.password, (err, wasCorrect) => {
+				if(err) {
+					console.log(err);
+				} else if (wasCorrect) {
+					return done(null, {
+						id: user._id,
+						user: user.username
+					});
+				} else {
+					return done(null, false);
+				}
+			})
+		}
+	})
+}));
 
-//             }
-            
-//         })
-//     }
-// ));
+// Serializing the user into a session (giving a cookie to browser)
+passport.serializeUser(function(user, done){
+    console.log("serialize user is executing")
+    done(null, user.id);
+})
+
+// Deserializing is used on every subsequent request *after* the initial login
+passport.deserializeUser(function(id, done){
+    db.interact('SELECT _id, username FROM users WHERE _id = $1', [parseInt(id)], (err, res) => {
+        if(err) {
+          return done(err)
+        }
+        return done(null, res.rows[0])
+	});
+});
 
 
 // =================================== ROUTES ===================================
+// home page is yet to be made
 app.get("/", (req, res) => {
     res.redirect("/signup");
 })
+
 
 // Our sign-up route
 app.get("/signup", (req, res) => {
@@ -101,11 +106,12 @@ app.get("/signup", (req, res) => {
 });
 // We add the user into our db here
 app.post("/signup", (req, res) => {
+	// encrypt our password and add into db
     bcrypt.hash(req.body.password, 5, (hashErr, hash) => {
         if(hashErr) {
             console.log("Unable to hash password: " + hashErr)
         } else {
-            db.addUser(username, hash, (success) => {
+            db.addUser(req.body.username, hash, (success) => {
 				console.log("Insertion status: " + success)
 				res.redirect("/login");
 			});
@@ -114,22 +120,38 @@ app.post("/signup", (req, res) => {
 })
 
 
+// Our login page, and the POST method for it.
 app.get("/login", (req, res) => {
-    res.render(path.join(__dirname, "front-end", "login.ejs"))
+	// If user already logged in, send to /app.
+	if(req.user) {
+		res.redirect("/app");
+	} else {
+		res.render(path.join(__dirname, "front-end", "login.ejs"))
+	}
 });
+// Post method for login. Here is where we actually log them in.
+app.post("/login", passport.authenticate("local"), function (req, res) {
+	console.log(req.user);
+	res.redirect("/app");
+})
+
 
 app.get("/app", (req, res) => {
-    let allResults;
+	if(!req.user) {
+		res.redirect("/login");
+	}
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
+	let allResults;
     db.interact("SELECT * FROM messages", (err, dbRes) => {
         if(err) {
             console.log(err);
         } else {
-            console.log("success");
-            allResults = dbRes.rows;
-            res.render(path.join(__dirname, "front-end", "chat.ejs"), {allResults: allResults});
+            console.log("Successfully oaded messages.");
+			allResults = dbRes.rows;
+			res.render(path.join(__dirname, "front-end", "chat.ejs"), {allResults: allResults})
         }
-    });
+    })
+	
 })
 
 

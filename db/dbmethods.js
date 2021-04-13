@@ -18,7 +18,7 @@ const client = new Pool({               // Establishing connection
 client.connect();                       // Connecting
 
 module.exports = {                      // This is our interact method we're exporting
-    interact: (text, params, callback) => {
+    interact: async (text, params, callback) => {
         const start = Date.now()
         return client.query(text, params, (err, res) => {
             const duration = Date.now() - start
@@ -26,6 +26,7 @@ module.exports = {                      // This is our interact method we're exp
             callback(err, res)
         })
     },
+
     addUser: (username, password, callback) => {
         client.query("SELECT * FROM users WHERE username = $1", [username], (err, res) => {
             if(err) {
