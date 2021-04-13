@@ -40,6 +40,18 @@ app.use(passport.session());
 
 // =================================== ROUTES ===================================
 app.get("/", (req, res) => {
+    res.redirect("/signup");;
+})
+
+app.get("/signup", (req, res) => {
+    res.render(path.join(__dirname, "front-end", "signup.ejs"));
+});
+
+app.get("/login", (req, res) => {
+    res.render(path.join(__dirname, "front-end", "login.ejs"))
+});
+
+app.get("/app", (req, res) => {
     let allResults;
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
     db.interact("SELECT * FROM messages", (err, dbRes) => {
@@ -48,7 +60,7 @@ app.get("/", (req, res) => {
         } else {
             console.log("success");
             allResults = dbRes.rows;
-            res.render(path.join(__dirname, "front-end", "index.ejs"), {allResults: allResults});
+            res.render(path.join(__dirname, "front-end", "chat.ejs"), {allResults: allResults});
         }
     });
 })
@@ -73,7 +85,7 @@ io.on("connection", socket => {
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
         db.interact(
-            "INSERT INTO messages (authorid, authorname, message, isPrivate) VALUES (1, '$1', '$2', FALSE)",
+            "INSERT INTO messages (authorid, authorname, message, isPrivate) VALUES (1, $1, $2, FALSE)",
             ["NoodleMaster", msg],
             (err, res) => {
                 if(err) {
