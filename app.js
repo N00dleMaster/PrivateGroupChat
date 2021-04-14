@@ -11,9 +11,9 @@ const passport = require("passport");       // Passport is what we use for our a
 const LocalStrategy =                       // Passport-local is the specific method we're using --
     require("passport-local").Strategy;     //      a simple username-password setup.
 const bcrypt = require("bcrypt");           // This allows us to encrypt our passwords
+const flash = require("connect-flash");     // This allows us to flash error messages (for failed login, etc.)
 
 const express = require("express");         // Require express
-const { serializeUser } = require("passport");
 const app = express();                      // execute express constructor to get the app object
 const http = require("http").Server(app);   // Require http, and pass express instance to it.
 
@@ -47,37 +47,43 @@ app.use(session({
 // Initializing passport
 app.use(passport.initialize());
 app.use(passport.session());
+// Flash allows us to "flash" error and success messages to the user.
+app.use(flash());
 
 
 // =================================== PASSPORT STUFF ===================================
 // This is our login "strategy"
-passport.use(new LocalStrategy( (username, password, done) => {
-	let user;
-	db.interact("SELECT * FROM users WHERE username = $1", [username], (err, res) => {
-		if(err) {
-			console.log(err);
-			return done(err);
-		} else if(res.rowCount > 0) {
-			console.log("Got user!")
-			user = res.rows[0];
-			bcrypt.compare(password, user.password, (err, wasCorrect) => {
-				if(err) {
-					console.log(err);
-				} else if (wasCorrect) {
-					return done(null, {
-						id: user._id,
-						user: user.username
-					});
-				} else {
-					return done(null, false);
-				}
-			})
-		} else {
-			console.log("User does not exist");
-			return done(null, false);
-		}
-	})
-}));
+passport.use(new LocalStrategy( 
+    {passReqToCallback: true}, 
+    (req, username, password, done) => {
+        let user;
+        db.interact("SELECT * FROM users WHERE username = $1", [username], (err, res) => {
+            if(err) {
+                console.log(err);
+                return done(err);
+            } else if(res.rowCount > 0) {
+                console.log("Got user!")
+                user = res.rows[0];
+                bcrypt.compare(password, user.password, (err, wasCorrect) => {
+                    if(err) {
+                        console.log(err);
+                    } else if (wasCorrect) {
+                        return done(null, {
+                            id: user._id,
+                            user: user.username
+                        });
+                    } else {
+                        console.log("Password was incorrect");
+                        return done(null, false, req.flash("error", "Password is incorrect."));
+                    }
+                })
+            } else {
+                console.log("User does not exist");
+                return done(null, false, req.flash("error", "User does not exist."));
+            }
+        })
+    }
+));
 
 // Serializing the user into a session (giving a cookie to browser)
 passport.serializeUser(function(user, done){
@@ -115,7 +121,7 @@ app.post("/signup", (req, res) => {
             console.log("Unable to hash password: " + hashErr)
         } else {
             db.addUser(req.body.username, hash, (success) => {
-				console.log("Insertion status: " + success)
+				console.log("Insertion status: " + success);
 				res.redirect("/login");
 			});
         }
@@ -129,13 +135,22 @@ app.get("/login", (req, res) => {
 	if(req.user) {
 		res.redirect("/app");
 	} else {
-		res.render(path.join(__dirname, "front-end", "login.ejs"))
+		res.render(path.join(__dirname, "front-end", "login.ejs"), {status: req.flash("error")})
 	}
 });
 // Post method for login. Here is where we actually log them in.
-app.post("/login", passport.authenticate("local"), function (req, res) {
-	console.log(req.user);
-	res.redirect("/app");
+app.post("/login", passport.authenticate("local", {
+        successRedirect: "/app",
+        failureRedirect: "/login",
+        failureFlash: true
+    }), 
+    function (req, res) {
+        if(req.user) {
+            res.redirect("/app");
+        } else {
+            console.log("Login unsuccessful");
+            res.redirect("/login");
+        }
 })
 
 

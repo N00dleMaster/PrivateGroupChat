@@ -5,9 +5,8 @@ body {
     justify-content: center;
 }
 
-h1 {
-    position: relative;
-    bottom: 5rem;
+h4 {
+    color:#bd3f43;
 }
 
 #loginForm {
