@@ -13,10 +13,10 @@
         <div id="contentWrapper">
             <ul id="messages">
                 <!-- Loading messages from our DB -->
-                <% allResults.forEach(element => { %>
+                <% allResults.forEach(message => { %>
                     <li>
-                        <p class="messageAuthor"> <%= element.authorname %> </p>
-                        <p class="messageContent"> <%= element.message %> </p>
+                        <p class="messageAuthor"> <%= message.authorname %> </p>
+                        <p class="messageContent"> <%= message.message %> </p>
                     </li>
                 <% }) %>
                 <!-- We'll be appending messages here using code -->
@@ -29,30 +29,21 @@
         </form>
 
 
+        <script>
+            // EJS looks kind of ugly. We'll pass the necessary info to our
+            // chat.js file in the following, hack-y way.
+            const username = "<%= user.username %>";
+            const userId = <%= user._id %>;
+                // Whatever is within these script tags, is now accessable within
+                // all our script tags, including the chat.js file, which is in a
+                // script tag right down below.
+        </script>
 
 
         <!-- This script tag is needed in order to use socket.js on the client-side -->
         <script src="/socket.io/socket.io.js"></script>
 
-        <!-- Since EJS looks kind of ugly, we're passing all the necessary info
-        into our index.js file as follows, in this hack-y way. -->
-        
-        
-        <!-- const newMsg = document.createElement("li");
-
-        const authorTitle = document.createElement("p");
-        authorTitle.classList.add("messageAuthor");
-        authorTitle.innerText = author;
-
-        const msgContent = document.createElement("p");
-        msgContent.classList.add("messageContent");
-        msgContent.innerText = msg;
-
-        newMsg.appendChild(authorTitle);
-        newMsg.appendChild(msgContent);
-        messages.appendChild(newMsg); -->
-
         <!-- This is the actual messing about we do using the socket.io capabilities -->
-        <script src="../js/index.js"></script>
+        <script src="../js/chat.js"></script>
     </body>
 </html>

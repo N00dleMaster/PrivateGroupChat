@@ -57,7 +57,7 @@ passport.use(new LocalStrategy( (username, password, done) => {
 		if(err) {
 			console.log(err);
 			return done(err);
-		} else {
+		} else if(res.rowCount > 0) {
 			console.log("Got user!")
 			user = res.rows[0];
 			bcrypt.compare(password, user.password, (err, wasCorrect) => {
@@ -72,6 +72,9 @@ passport.use(new LocalStrategy( (username, password, done) => {
 					return done(null, false);
 				}
 			})
+		} else {
+			console.log("User does not exist");
+			return done(null, false);
 		}
 	})
 }));
@@ -146,14 +149,20 @@ app.get("/app", (req, res) => {
         if(err) {
             console.log(err);
         } else {
-            console.log("Successfully oaded messages.");
+            console.log("Successfully loaded messages.");
 			allResults = dbRes.rows;
-			res.render(path.join(__dirname, "front-end", "chat.ejs"), {allResults: allResults})
+			// Pass in all the messages, and the user, to the chat.ejs file
+			res.render(path.join(__dirname, "front-end", "chat.ejs"), {allResults: allResults, user: req.user})
         }
     })
 	
 })
 
+
+app.get("/logout", (req, res) => {
+	req.logout();
+	res.redirect("/login");
+})
 
 
 // =================================== SOCKET.IO HANDLING ===================================
@@ -167,15 +176,15 @@ io.on("connection", socket => {
     // index.js. Submitting the form triggers
     // a "chat_message" event which we define. This event is a socket event,
     // and is handled here.
-    socket.on("chat_message", (msg, author) => {
+    socket.on("chat_message", (authorId, author, msg) => {
         // io.emit() emits information to *all* the connected sockets. This is then
         // handled *again* on the client side. (see index.html)
-        io.emit("chat_message", msg, author);
+        io.emit("chat_message", authorId, author, msg);
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
         db.interact(
-            "INSERT INTO messages (authorid, authorname, message, isPrivate) VALUES (1, $1, $2, FALSE)",
-            ["NoodleMaster", msg],
+            "INSERT INTO messages (authorid, authorname, message, isPrivate) VALUES ($1, $2, $3, FALSE)",
+            [authorId, author, msg],
             (err, res) => {
                 if(err) {
                     console.log(err);

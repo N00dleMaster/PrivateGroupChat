@@ -5,24 +5,24 @@ const messages = document.getElementById("messages");
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 
+// Note: See our chat.ejs file in order to understand where we 
+//       got the values for username, and userId.
 
 // ============ EVENT LISTENERS =============
 form.addEventListener('submit', function(e) {
     e.preventDefault(); // Prevents the form from reloading page
     if (input.value) {
         // This emits a "chat_message" event, which we define and handle below
-        socket.emit('chat_message', input.value, username);
+        socket.emit('chat_message', userId, username, input.value);
         input.value = '';
     }
 });
 
-// temporary asking of a username
-let username = window.prompt("Enter a username:");
-username = (username == "") ? "Unnamed Bum-Bum" : username;
 
-// ============= SOCKET.IO EVENTS ==================
+
+// ================ SOCKET.IO EVENTS ==================
 // See the app.js file for the "chat_message" event
-socket.on("chat_message", (msg, author) => {
+socket.on("chat_message", (authorId, author, msg) => {
     createMsg(msg, author);
 });
 
