@@ -172,7 +172,7 @@ app.get("/app", (req, res) => {
             let allPrivate = [];
             let allGeneral = [];
             dbRes.rows.forEach((result) => {
-                if(result.isprivate) {
+                if(result.room == "sensitive") {
                     allPrivate.push(result);
                 } else {
                     allGeneral.push(result);
@@ -180,8 +180,6 @@ app.get("/app", (req, res) => {
             })
             res.render(path.join(__dirname, "front-end", "chat.ejs"), 
                 {allPrivate: allPrivate, allGeneral: allGeneral, user: req.user});
-            // Pass in all the messages, and the user, to the chat.ejs file
-            // res.render(path.join(__dirname, "front-end", "chat.ejs"), {allResults: allResults, user: req.user})
         }
     })
 	
@@ -201,9 +199,8 @@ app.get("/logout", (req, res) => {
 io.on("connection", socket => {       
     console.log("A wild user appeared! ");
 
-    socket.on("room", (room, username) => {
+    socket.on("room", (room) => {
         socket.join(room);
-        console.log(username + " joined room: " + room);
     })
 
     // This "chat_message" event is custom. We've named it ourself. Check out
@@ -217,8 +214,8 @@ io.on("connection", socket => {
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
         db.interact(
-            "INSERT INTO messages (authorid, authorname, message, isPrivate) VALUES ($1, $2, $3, FALSE)",
-            [authorId, author, msg], () => {}
+            "INSERT INTO messages (authorid, authorname, message, room) VALUES ($1, $2, $3, $4)",
+            [authorId, author, msg, room], () => {}
         );
     });
 

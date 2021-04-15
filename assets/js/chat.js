@@ -4,6 +4,7 @@ const socket = io.connect("http://localhost:8080");
 // All our DOM elements
 const generalMessages = document.querySelector(".general");
 const sensitiveMessages = document.querySelector(".private");
+
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 
@@ -17,11 +18,11 @@ scrollBottom();     // On page load, we want the user to be scrolled to the bott
 // Note: See our chat.ejs file in order to understand where we 
 //       got the values for username, and userId.
 
-// ============ EVENT LISTENERS =============
+// ==================================== EVENT LISTENERS ====================================
 form.addEventListener('submit', (e) => {
     e.preventDefault(); // Prevents the form from reloading page (default behaviour)
     if (input.value) {
-        // This emits a "chat_message" event to a certain room, which we define and handle below
+        // This emits a "chat_message" event to a certain room, which we define and handle below and on back-end
         socket.emit('chat_message', userId, username, input.value, room);
         input.value = '';
     }
@@ -57,16 +58,16 @@ let room = "general"; // This is the room we join on page load.
 
 // See the app.js file for the backend handling of each event
 socket.on("connect", () => {
-    socket.emit("room", room, username);
+    socket.emit("room", room);
 })
 socket.on("chat_message", (authorId, author, msg) => {
-    createMsg(msg, author);
+    createMsg(msg, author, room);
     scrollBottom()
 });
 
 
-// ============== MISC EVENTS =================
-function createMsg(msg,author) {
+// ================================== MISC FUNCTIONS ==================================
+function createMsg(msg, author, chat) {
     // Create new element, append to ul
     const newMsg = document.createElement("li");
 
@@ -80,11 +81,14 @@ function createMsg(msg,author) {
 
     newMsg.appendChild(authorTitle);
     newMsg.appendChild(msgContent);
-    generalMessages.appendChild(newMsg);
+
+    if(chat == "general") {
+        generalMessages.appendChild(newMsg);
+    } else {
+        sensitiveMessages.appendChild(newMsg);
+    }
 }
 
 function scrollBottom() {
-    // if(messages.scrollTop + messages.clientHeight === messages.scrollHeight) {
-        generalMessages.scrollTop = generalMessages.scrollHeight;
-    // }
+    generalMessages.scrollTop = generalMessages.scrollHeight;
 }

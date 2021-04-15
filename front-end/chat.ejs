@@ -15,6 +15,7 @@
                 <p id="general">General</p>
                 <p id="sensitive">Sensitive</p>
             </div>
+
             <ul class="general messages">
                 <!-- Loading messages from our DB -->
                 <% allGeneral.forEach(message => { %>
@@ -25,7 +26,6 @@
                 <% }) %>
                 <!-- We'll be appending messages here using code -->
             </ul>
-            <br>
             <ul class="private messages">
                 <!-- Loading messages from our DB -->
                 <% allPrivate.forEach(message => { %>
@@ -38,6 +38,7 @@
             </ul>
         </div>
 
+        
         <form id="form" action="">
             <input id="input" autocomplete="off"/>
             <button id="send">Send</button>
