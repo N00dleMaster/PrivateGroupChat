@@ -111,7 +111,7 @@ app.get("/", (req, res) => {
 
 // Our sign-up route
 app.get("/signup", (req, res) => {
-    res.render(path.join(__dirname, "front-end", "signup.ejs"));
+    res.render(path.join(__dirname, "front-end", "signup.ejs"), {message: req.flash("signup_message")});
 });
 // We add the user into our db here
 app.post("/signup", (req, res) => {
@@ -122,7 +122,12 @@ app.post("/signup", (req, res) => {
         } else {
             db.addUser(req.body.username, hash, (success) => {
 				console.log("Insertion status: " + success);
-				res.redirect("/login");
+                if(success) {
+                    res.redirect("/login");
+                } else {
+                    req.flash("signup_message", "Username is taken.");
+                    res.redirect("/signup")
+                }
 			});
         }
     })
