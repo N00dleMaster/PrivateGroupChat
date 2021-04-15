@@ -192,26 +192,25 @@ app.get("/logout", (req, res) => {
 io.on("connection", socket => {       
     console.log("A wild user appeared! ");
 
+    socket.on("room", (room, username) => {
+        socket.join(room);
+        console.log(username + " joined room: " + room);
+    })
+
     // This "chat_message" event is custom. We've named it ourself. Check out
     // index.js. Submitting the form triggers
     // a "chat_message" event which we define. This event is a socket event,
     // and is handled here.
-    socket.on("chat_message", (authorId, author, msg) => {
+    socket.on("chat_message", (authorId, author, msg, room) => {
         // io.emit() emits information to *all* the connected sockets. This is then
         // handled *again* on the client side. (see index.html)
-        io.emit("chat_message", authorId, author, msg);
+        io.to(room).emit("chat_message", authorId, author, msg);
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
         db.interact(
             "INSERT INTO messages (authorid, authorname, message, isPrivate) VALUES ($1, $2, $3, FALSE)",
-            [authorId, author, msg],
-            (err, res) => {
-                if(err) {
-                    console.log(err);
-                } else {
-                    console.log("Added new message:\n" + res.rows);
-                }
-            });
+            [authorId, author, msg], () => {}
+        );
     });
 
     // The disconnect event is built into socket

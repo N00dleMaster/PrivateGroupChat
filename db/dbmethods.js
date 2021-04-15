@@ -18,11 +18,8 @@ const client = new Pool({               // Establishing connection
 client.connect();                       // Connecting
 
 module.exports = {                      // This is our interact method we're exporting
-    interact: async (text, params, callback) => {
-        const start = Date.now()
+    interact: (text, params, callback) => {
         return client.query(text, params, (err, res) => {
-            const duration = Date.now() - start
-            // console.log('executed query', { text, duration, rows: res.rowCount })
             callback(err, res)
         })
     },
