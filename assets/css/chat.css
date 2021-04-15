@@ -3,6 +3,20 @@
     margin-left: 2.5%;
 }
 
+#tabSwitcher {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+#tabSwitcher p {
+    width: 50%;
+    height: 3rem;   
+    text-align: center;
+    background-color: #161A1D;
+    margin: 1rem 0.25rem 0 0.25rem;
+    border-radius: 1rem 1rem 0 0;
+}
+
 #messages {
     width: 100%;
     padding: 0;
