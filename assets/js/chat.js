@@ -2,7 +2,8 @@
 const socket = io.connect("http://localhost:8080");
 
 // All our DOM elements
-const messages = document.getElementById("messages");
+const generalMessages = document.querySelector(".general");
+const sensitiveMessages = document.querySelector(".private");
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 
@@ -27,15 +28,25 @@ form.addEventListener('submit', (e) => {
 });
 
 general.addEventListener('click', (e) => {
-    room = "general";
+    room = "general";  // Set room to "general"
+    // Change background colour of tab; hide the sensitive chat ul
     general.style.backgroundColor = "#0B090A";
+    generalMessages.style.display = "initial";
+    // Change background colour of tab; hide general chat ul
     sensitive.style.backgroundColor = "#161A1D";
+    sensitiveMessages.style.display = "none";
+    // Emit a room change event, handled on back-end
     socket.emit("room", room);
 })
 sensitive.addEventListener('click', (e) => {
-    room = "sensitive";
+    room = "sensitive"; // set room to "sensitive"
+    // Change background colour of tab; hide the sensitive chat ul
     sensitive.style.backgroundColor = "#0B090A";
+    sensitiveMessages.style.display = "initial";
+    // Change background colour of tab; hide general chat ul
     general.style.backgroundColor = "#161A1D";
+    generalMessages.style.display = "none";
+    // Emit a room change event, handled on back-end
     socket.emit("room", room);
 })
 
@@ -69,11 +80,11 @@ function createMsg(msg,author) {
 
     newMsg.appendChild(authorTitle);
     newMsg.appendChild(msgContent);
-    messages.appendChild(newMsg);
+    generalMessages.appendChild(newMsg);
 }
 
 function scrollBottom() {
     // if(messages.scrollTop + messages.clientHeight === messages.scrollHeight) {
-        messages.scrollTop = messages.scrollHeight;
+        generalMessages.scrollTop = generalMessages.scrollHeight;
     // }
 }

@@ -15,15 +15,20 @@
                 <p id="general">General</p>
                 <p id="sensitive">Sensitive</p>
             </div>
-            <ul id="messages">
+            <ul class="general messages">
                 <!-- Loading messages from our DB -->
-                <% allPrivate.forEach(message => { %>
+                <% allGeneral.forEach(message => { %>
                     <li>
                         <p class="messageAuthor"> <%= message.authorname %> </p>
                         <p class="messageContent"> <%= message.message %> </p>
                     </li>
                 <% }) %>
-                <% allGeneral.forEach(message => { %>
+                <!-- We'll be appending messages here using code -->
+            </ul>
+            <br>
+            <ul class="private messages">
+                <!-- Loading messages from our DB -->
+                <% allPrivate.forEach(message => { %>
                     <li>
                         <p class="messageAuthor"> <%= message.authorname %> </p>
                         <p class="messageContent"> <%= message.message %> </p>

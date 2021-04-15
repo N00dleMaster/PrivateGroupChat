@@ -164,7 +164,6 @@ app.get("/app", (req, res) => {
 		res.redirect("/login");
 	}
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
-	let allResults;
     db.interact("SELECT * FROM messages", (err, dbRes) => {
         if(err) {
             console.log(err);
