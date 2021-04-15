@@ -1,9 +1,12 @@
 // This is the client-side socket connection we need to establish
 const socket = io.connect("http://localhost:8080");
 
+
 const messages = document.getElementById("messages");
 const form = document.getElementById('form');
 const input = document.getElementById('input');
+
+scrollBottom();     // On page load, we want the user to be scrolled to the bottom by default.
 
 // Note: See our chat.ejs file in order to understand where we 
 //       got the values for username, and userId.
@@ -24,6 +27,7 @@ form.addEventListener('submit', function(e) {
 // See the app.js file for the "chat_message" event
 socket.on("chat_message", (authorId, author, msg) => {
     createMsg(msg, author);
+    scrollBottom()
 });
 
 
@@ -43,4 +47,10 @@ function createMsg(msg,author) {
     newMsg.appendChild(authorTitle);
     newMsg.appendChild(msgContent);
     messages.appendChild(newMsg);
+}
+
+function scrollBottom() {
+    // if(messages.scrollTop + messages.clientHeight === messages.scrollHeight) {
+        messages.scrollTop = messages.scrollHeight;
+    // }
 }
