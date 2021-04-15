@@ -18,7 +18,7 @@ const client = new Pool({               // Establishing connection
 client.connect();                       // Connecting
 
 module.exports = {                      // This is our interact method we're exporting
-    interact: (text, params, callback) => {
+    interact: async (text, params, callback) => {
         return client.query(text, params, (err, res) => {
             callback(err, res)
         })

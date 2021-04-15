@@ -1,23 +1,26 @@
 // This is the client-side socket connection we need to establish
 const socket = io.connect("http://localhost:8080");
 
+// All our DOM elements
 const messages = document.getElementById("messages");
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 
 const general = document.getElementById("general");
-const senstive = document.getElementById("sensitive");
+const sensitive = document.getElementById("sensitive");
 
 scrollBottom();     // On page load, we want the user to be scrolled to the bottom by default.
+
+
 
 // Note: See our chat.ejs file in order to understand where we 
 //       got the values for username, and userId.
 
 // ============ EVENT LISTENERS =============
 form.addEventListener('submit', (e) => {
-    e.preventDefault(); // Prevents the form from reloading page
+    e.preventDefault(); // Prevents the form from reloading page (default behaviour)
     if (input.value) {
-        // This emits a "chat_message" event, which we define and handle below
+        // This emits a "chat_message" event to a certain room, which we define and handle below
         socket.emit('chat_message', userId, username, input.value, room);
         input.value = '';
     }
@@ -25,10 +28,14 @@ form.addEventListener('submit', (e) => {
 
 general.addEventListener('click', (e) => {
     room = "general";
+    general.style.backgroundColor = "#0B090A";
+    sensitive.style.backgroundColor = "#161A1D";
     socket.emit("room", room);
 })
-senstive.addEventListener('click', (e) => {
+sensitive.addEventListener('click', (e) => {
     room = "sensitive";
+    sensitive.style.backgroundColor = "#0B090A";
+    general.style.backgroundColor = "#161A1D";
     socket.emit("room", room);
 })
 

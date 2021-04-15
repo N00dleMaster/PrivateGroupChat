@@ -170,9 +170,19 @@ app.get("/app", (req, res) => {
             console.log(err);
         } else {
             console.log("Successfully loaded messages.");
-			allResults = dbRes.rows;
-			// Pass in all the messages, and the user, to the chat.ejs file
-			res.render(path.join(__dirname, "front-end", "chat.ejs"), {allResults: allResults, user: req.user})
+            let allPrivate = [];
+            let allGeneral = [];
+            dbRes.rows.forEach((result) => {
+                if(result.isprivate) {
+                    allPrivate.push(result);
+                } else {
+                    allGeneral.push(result);
+                }
+            })
+            res.render(path.join(__dirname, "front-end", "chat.ejs"), 
+                {allPrivate: allPrivate, allGeneral: allGeneral, user: req.user});
+            // Pass in all the messages, and the user, to the chat.ejs file
+            // res.render(path.join(__dirname, "front-end", "chat.ejs"), {allResults: allResults, user: req.user})
         }
     })
 	

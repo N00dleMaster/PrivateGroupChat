@@ -17,7 +17,13 @@
             </div>
             <ul id="messages">
                 <!-- Loading messages from our DB -->
-                <% allResults.forEach(message => { %>
+                <% allPrivate.forEach(message => { %>
+                    <li>
+                        <p class="messageAuthor"> <%= message.authorname %> </p>
+                        <p class="messageContent"> <%= message.message %> </p>
+                    </li>
+                <% }) %>
+                <% allGeneral.forEach(message => { %>
                     <li>
                         <p class="messageAuthor"> <%= message.authorname %> </p>
                         <p class="messageContent"> <%= message.message %> </p>

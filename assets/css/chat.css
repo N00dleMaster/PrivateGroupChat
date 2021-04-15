@@ -16,9 +16,12 @@
     box-sizing: border-box;
     padding-top: 0.8rem;
     text-align: center;
-    background-color: #161A1D;
+    background-color: #0B090A;
     margin: 1rem 0.25rem 0 0.25rem;
     border-radius: 1rem 1rem 0 0;
+}
+#tabSwitcher p:last-child {
+    background-color: #161A1D;
 }
 
 /* Where our messages go */
