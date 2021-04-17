@@ -45,5 +45,10 @@ module.exports = {                      // This is our interact method we're exp
 				})
 			}
         })
+    },
+
+    deleteConversation: (conversation) => {
+        client.query("DELETE FROM messages WHERE room = $1", [conversation])
     }
+
   }

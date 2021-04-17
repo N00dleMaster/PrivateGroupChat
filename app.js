@@ -21,6 +21,20 @@ const io = require("socket.io")(http);      // Require socket.io, pass http serv
                                             //   --> Socket.io works by being attached onto an http server instance
 
 
+// =================================== CLEANING THE DB EVERY DAY/WEEK ===================================
+const initialDate = new Date();
+let currentDay = initialDate.getDay();
+setInterval(() => {
+    const newDate = new Date();
+    let day = newDate.getDay();
+    console.log(day);
+    if(day != currentDay) {
+        db.deleteConversation("general");
+        currentDay = day;
+    }
+}, 10000)
+
+
 
 // =================================== SETTING UP EXPRESS STUFF ===================================
 // express.static() sets up any "static" files we'll need to serve.
