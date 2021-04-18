@@ -55,6 +55,10 @@
     margin: 0 0 0.125rem 0;
 }
 
+.private {
+    display: none;
+}
+
 #form {
     width: 95%;
     display: flex;

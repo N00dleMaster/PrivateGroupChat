@@ -23,16 +23,18 @@ const io = require("socket.io")(http);      // Require socket.io, pass http serv
 
 // =================================== CLEANING THE DB EVERY DAY/WEEK ===================================
 const initialDate = new Date();         // A date to start us off
-let prevDay = initialDate.getDay();  // A day to start us off
+let prevDay = initialDate.getDay();     // A day to start us off
+console.log(prevDay);
 setInterval(() => {
-    const newDate = new Date();             // Create date obj everytime it runs
-    let day = newDate.getDay();             // get the day
+    const newDate = new Date();                             // Create date obj everytime it runs
+    let day = newDate.getDay();                             // get the day
+    let time = newDate.getHours() + newDate.getMinutes();   // Get hrs and minutes
     console.log(day);
-    if(day != prevDay) {                    // If the day has changed, delete "sensitive" convo 
+    if(day != prevDay) {                                    // If the day has changed, delete "sensitive" convo 
         db.deleteConversation("sensitive");
-        currentDay = day;
+        prevDay = day;
     }
-    if(day == 0) {                          // If it's a new week, delete the "general" convo
+    if(day == 0 && time == "0000") {                         // If it's a new week, delete the "general" convo
         db.deleteConversation("general");
     }
 }, 60000)                                   // This func. runs every minute
