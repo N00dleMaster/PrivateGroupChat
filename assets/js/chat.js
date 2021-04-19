@@ -62,16 +62,30 @@ sensitive.addEventListener('click', (e) => {
 
 
 // ================ SOCKET.IO EVENTS ==================
+// See the app.js file for the backend handling of each event
 let room = "general"; // This is the room we join on page load.
 
-// See the app.js file for the backend handling of each event
+// On connection, we do this:
 socket.on("connect", () => {
     socket.emit("room", room);  // The "Room" event is handled exclusively on the back-end.
 })
+
+// On a chat message event, we do this:
 socket.on("chat_message", (authorId, author, msgId, msg) => {
     createMsg(msg, msgId, author, room);
     scrollBottom()
 });
+
+// On a message deletion event, we do this:
+socket.on("delete", (msgId) => {
+    const msgs = document.querySelectorAll(".options p");
+    // We start from the end of array bcs the message is more likely to be near the start
+    for(let i=msgs.length-1; i>=0; i--) {
+        if(parseInt(msgs[i].innerText) === msgId) {
+            msgs[i].parentElement.parentElement.remove();
+        }
+    }
+})
 
 
 // ================================== MISC FUNCTIONS ==================================
@@ -111,7 +125,6 @@ function createMsg(msg, msgId, author, chat) {
 
 function attachDeleteBtnEventListener(btn) {
     btn.addEventListener("click", () => {
-        console.log(btn);
         // The previous sibling of the btn is an invisible <p> with the msg id, necessary for deletion.
         socket.emit("delete", parseInt(btn.previousElementSibling.innerText))
     })

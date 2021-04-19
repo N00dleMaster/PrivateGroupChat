@@ -246,6 +246,7 @@ io.on("connection", socket => {
             if(err) {console.log(err)}
             else{console.log(res.rowCount)}
         })
+        io.emit("delete", msgId);
     })
 
     // The disconnect event is built into socket
