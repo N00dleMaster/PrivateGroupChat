@@ -19,6 +19,7 @@ scrollBottom();     // On page load, we want the user to be scrolled to the bott
 //       got the values for username, and userId.
 
 // ==================================== EVENT LISTENERS ====================================
+// For sending message
 form.addEventListener('submit', (e) => {
     e.preventDefault(); // Prevents the form from reloading page (default behaviour)
     if (input.value) {
@@ -28,6 +29,11 @@ form.addEventListener('submit', (e) => {
     }
 });
 
+document.querySelectorAll(".delete").forEach((btn) => {
+    attachDeleteBtnEventListener(btn);
+})
+
+// For switching btwn #general and #sensitive channels
 general.addEventListener('click', (e) => {
     room = "general";  // Set room to "general"
     // Change background colour of tab; hide the sensitive chat ul
@@ -38,6 +44,7 @@ general.addEventListener('click', (e) => {
     sensitiveMessages.style.display = "none";
     // Emit a room change event, handled on back-end
     socket.emit("room", room);
+    scrollBottom();
 })
 sensitive.addEventListener('click', (e) => {
     room = "sensitive"; // set room to "sensitive"
@@ -49,6 +56,7 @@ sensitive.addEventListener('click', (e) => {
     generalMessages.style.display = "none";
     // Emit a room change event, handled on back-end
     socket.emit("room", room);
+    scrollBottom();
 })
 
 
@@ -58,16 +66,16 @@ let room = "general"; // This is the room we join on page load.
 
 // See the app.js file for the backend handling of each event
 socket.on("connect", () => {
-    socket.emit("room", room);
+    socket.emit("room", room);  // The "Room" event is handled exclusively on the back-end.
 })
-socket.on("chat_message", (authorId, author, msg) => {
-    createMsg(msg, author, room);
+socket.on("chat_message", (authorId, author, msgId, msg) => {
+    createMsg(msg, msgId, author, room);
     scrollBottom()
 });
 
 
 // ================================== MISC FUNCTIONS ==================================
-function createMsg(msg, author, chat) {
+function createMsg(msg, msgId, author, chat) {
     // Create new element, append to ul
     const newMsg = document.createElement("li");
 
@@ -79,14 +87,35 @@ function createMsg(msg, author, chat) {
     msgContent.classList.add("messageContent");
     msgContent.innerText = msg;
 
+    const options = document.createElement("div");
+    options.classList.add("options");
+    const info = document.createElement("p");
+    info.innerText = msgId;
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "delet";
+    deleteBtn.classList.add("delete");
+    attachDeleteBtnEventListener(deleteBtn);
+    options.appendChild(info);
+    options.appendChild(deleteBtn);
+
     newMsg.appendChild(authorTitle);
     newMsg.appendChild(msgContent);
+    newMsg.appendChild(options);
 
     if(chat == "general") {
         generalMessages.appendChild(newMsg);
     } else {
         sensitiveMessages.appendChild(newMsg);
     }
+}
+
+function attachDeleteBtnEventListener(btn) {
+    btn.addEventListener("click", () => {
+        console.log(btn);
+        // The previous sibling of the btn is an invisible <p> with the msg id, necessary for deletion.
+        socket.emit("delete", parseInt(btn.previousElementSibling.innerText))
+    })
+    return btn;
 }
 
 function scrollBottom() {

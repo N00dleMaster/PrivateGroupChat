@@ -218,6 +218,7 @@ app.get("/logout", (req, res) => {
 io.on("connection", socket => {       
     console.log("A wild user appeared! ");
 
+    // This event is for changing rooms
     socket.on("room", (room) => {
         socket.join(room);
     })
@@ -227,16 +228,25 @@ io.on("connection", socket => {
     // a "chat_message" event which we define. This event is a socket event,
     // and is handled here.
     socket.on("chat_message", (authorId, author, msg, room) => {
-        // io.emit() emits information to *all* the connected sockets. This is then
-        // handled *again* on the client side. (see index.html)
-        io.to(room).emit("chat_message", authorId, author, msg);
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
         db.interact(
-            "INSERT INTO messages (authorid, authorname, message, room) VALUES ($1, $2, $3, $4)",
-            [authorId, author, msg, room], () => {}
+            "INSERT INTO messages (authorid, authorname, message, room) VALUES ($1, $2, $3, $4) RETURNING *",
+            [authorId, author, msg, room], (err, res) => {
+                // io.emit() emits information to *all* the connected sockets. This is then
+                // handled *again* on the client side. (see index.html)
+                io.to(room).emit("chat_message", authorId, author, res.rows[0]._id, msg);
+            }
         );
     });
+
+    socket.on("delete", (msgId) => {
+        db.interact("DELETE FROM messages WHERE _id = $1 RETURNING *", [msgId], (err, res) => {
+            console.log("id is: " + msgId);
+            if(err) {console.log(err)}
+            else{console.log(res.rowCount)}
+        })
+    })
 
     // The disconnect event is built into socket
     socket.on("disconnect", () => {  
