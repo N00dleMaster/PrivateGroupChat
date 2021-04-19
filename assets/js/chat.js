@@ -61,7 +61,7 @@ sensitive.addEventListener('click', (e) => {
 
 
 
-// ================ SOCKET.IO EVENTS ==================
+// ==================================== SOCKET.IO EVENTS ====================================
 // See the app.js file for the backend handling of each event
 let room = "general"; // This is the room we join on page load.
 

@@ -21,11 +21,13 @@
                 <% allGeneral.forEach(message => { %>
                     <li>
                         <p class="messageAuthor"> <%=message.authorname%> </p>
-                        <p class="messageContent"> <%=message.message%> </p>
-                        <div class="options">
-                            <p><%=message._id%></p>
-                            <button class="delete">delet</button>
-                        </div>
+                        <p class="messageContent"><%=message.message%></p>
+                        <% if (message.authorid == user._id) { %>
+                            <div class="options">
+                                <p><%=message._id%></p>
+                                <button class="delete">delet</button>
+                            </div>
+                        <% } %>
                     </li>
                 <% }) %>
                 <!-- We'll be appending messages here using code -->
