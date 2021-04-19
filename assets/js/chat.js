@@ -38,7 +38,7 @@ general.addEventListener('click', (e) => {
     room = "general";  // Set room to "general"
     // Change background colour of tab; hide the sensitive chat ul
     general.style.backgroundColor = "#0B090A";
-    generalMessages.style.display = "initial";
+    generalMessages.style.display = "inherit";
     // Change background colour of tab; hide general chat ul
     sensitive.style.backgroundColor = "#161A1D";
     sensitiveMessages.style.display = "none";
@@ -50,7 +50,7 @@ sensitive.addEventListener('click', (e) => {
     room = "sensitive"; // set room to "sensitive"
     // Change background colour of tab; hide the sensitive chat ul
     sensitive.style.backgroundColor = "#0B090A";
-    sensitiveMessages.style.display = "initial";
+    sensitiveMessages.style.display = "inherit";
     // Change background colour of tab; hide general chat ul
     general.style.backgroundColor = "#161A1D";
     generalMessages.style.display = "none";
