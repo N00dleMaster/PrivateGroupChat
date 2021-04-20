@@ -107,6 +107,8 @@ passport.use(new LocalStrategy(
 // Serializing the user into a session (giving a cookie to browser)
 passport.serializeUser(function(user, done){
     console.log("serialize user is executing")
+    // We only give the browser the user's id, so when the cookie 
+    // is "deserialized" we can use the id to repopulate the req.user
     done(null, user.id);
 })
 
@@ -206,8 +208,14 @@ app.get("/app", (req, res) => {
 
 
 // User settings, where you can do stuff
-app.get("users/user", (req, res) => {
-    res.send("it works");
+app.get("/users/:id", (req, res) => {
+    if(!req.user) {
+        res.redirect("/login");   
+    } else if(req.user._id != req.params.id){
+        res.redirect("/app");
+    } else {
+        res.render(path.join(__dirname, "front-end", "settings.ejs"), {user: req.user});
+    }
 })
 
 
