@@ -178,6 +178,7 @@ app.post("/login", passport.authenticate("local", {
 })
 
 
+// The actual app where the chatting happens.
 app.get("/app", (req, res) => {
 	if(!req.user) {
 		res.redirect("/login");
@@ -201,7 +202,12 @@ app.get("/app", (req, res) => {
                 {allPrivate: allPrivate, allGeneral: allGeneral, user: req.user});
         }
     })
-	
+})
+
+
+// User settings, where you can do stuff
+app.get("users/user", (req, res) => {
+    res.send("it works");
 })
 
 
