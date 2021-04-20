@@ -87,10 +87,7 @@ passport.use(new LocalStrategy(
                     if(err) {
                         console.log(err);
                     } else if (wasCorrect) {
-                        return done(null, {
-                            id: user._id,
-                            user: user.username
-                        });
+                        return done(null, {id: user._id});
                     } else {
                         console.log("Password was incorrect");
                         return done(null, false, req.flash("error", "Password is incorrect."));
@@ -216,6 +213,9 @@ app.get("/users/:id", (req, res) => {
     } else {
         res.render(path.join(__dirname, "front-end", "settings.ejs"), {user: req.user});
     }
+})
+app.post("/users/:id", (req, res) => {
+    res.send(req.body);
 })
 
 
