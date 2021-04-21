@@ -24,12 +24,10 @@ const io = require("socket.io")(http);      // Require socket.io, pass http serv
 // =================================== CLEANING THE DB EVERY DAY/WEEK ===================================
 const initialDate = new Date();         // A date to start us off
 let prevDay = initialDate.getDay();     // A day to start us off
-console.log(prevDay);
 setInterval(() => {
     const newDate = new Date();                             // Create date obj everytime it runs
     let day = newDate.getDay();                             // get the day
     let time = newDate.getHours() + newDate.getMinutes();   // Get hrs and minutes
-    console.log(day);
     if(day != prevDay) {                                    // If the day has changed, delete "sensitive" convo 
         db.deleteConversation("sensitive");
         prevDay = day;
@@ -111,7 +109,7 @@ passport.serializeUser(function(user, done){
 
 // Deserializing is used on every subsequent request *after* the initial login
 passport.deserializeUser(function(id, done){
-    db.interact('SELECT _id, username FROM users WHERE _id = $1', [parseInt(id)], (err, res) => {
+    db.interact('SELECT _id, username, pfp, colour FROM users WHERE _id = $1', [parseInt(id)], (err, res) => {
         if(err) {
           return done(err)
         }
@@ -215,7 +213,7 @@ app.get("/users/:id", (req, res) => {
     }
 })
 app.post("/users/:id", (req, res) => {
-    res.send(req.body);
+    res.send(req.user);
 })
 
 
