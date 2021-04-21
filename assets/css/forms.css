@@ -3,6 +3,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 100%;
 }
 
 h4 {
@@ -14,13 +15,13 @@ h4 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 75%;
+    width: 30rem;
 }
 
 #loginForm input {
     width: 100%;
     padding: 0.5rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.25rem;
     font-size: 1.2rem;
     background-color:#A4161A;
     color: white;
@@ -37,4 +38,13 @@ h4 {
     border: 3px solid #660708;
     background-color: #A4161A;
     color: white;
+}
+
+.colour {
+    height: 3rem;
+}
+
+p {
+    font-size: 1.5rem;
+    margin: 0.25rem 0 0 0;
 }

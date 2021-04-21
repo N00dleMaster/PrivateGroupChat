@@ -12,11 +12,17 @@
     <body>
 
         <h1>Join in the revelry, human!</h1>
-        <h4> <%= message %> </h4>
+        <h4> <%= message %> </h4> <!-- An error message, if there is any. -->
 
         <form id="loginForm" action="/signup" method="POST">
+            <p>Username:</p>
             <input placeholder="Username" name="username" type="text">
+            <p>Password:</p>
             <input placeholder="Password" name="password" type="password">
+            <p>Profile Picture:</p>
+            <input placeholder="Paste link here..." name="pfp" type="text">
+            <p>User colour:</p>
+            <input class="colour" name="colour" type="color">
             <button>Sign up</button>
         </form>
         

@@ -21,9 +21,9 @@
                 <!-- Loading messages from our DB -->
                 <% allGeneral.forEach(message => { %>
                     <li>
-                        <img src="<%=user.pfp%>" alt="pfp" class="pfp">
+                        <img src="<%=message.pfp%>" alt="pfp" class="pfp">
                         <div class="messageDiv">
-                            <p class="messageAuthor"><%=message.authorname%></p>
+                            <p style="color:<%=message.colour%>;"class="messageAuthor"><%=message.username%></p>
                             <p class="messageContent"><%=message.message%></p>
                             <% if (message.authorid == user._id) { %>
                                 <div class="options">
@@ -40,9 +40,9 @@
                 <!-- Loading messages from our DB -->
                 <% allPrivate.forEach(message => { %>
                     <li>
-                        <img src="<%=user.pfp%>" alt="pfp" class="pfp">
+                        <img src="<%=message.pfp%>" alt="pfp" class="pfp">
                         <div class="messageDiv">
-                            <p class="messageAuthor"><%=message.authorname%></p>
+                            <p style="color:<%=message.colour%>;"class="messageAuthor"><%=message.username%></p>
                             <p class="messageContent"><%=message.message%></p>
                             <% if (message.authorid == user._id) { %>
                                 <div class="options">

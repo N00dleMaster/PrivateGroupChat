@@ -181,7 +181,8 @@ app.get("/app", (req, res) => {
 		res.redirect("/login");
 	}
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
-    db.interact("SELECT * FROM messages", (err, dbRes) => {
+    db.interact("SELECT users.username, messages.message, messages.room, users.pfp, users.colour FROM users JOIN messages ON users._id=messages.authorid;",
+    (err, dbRes) => {
         if(err) {
             console.log(err);
         } else {
@@ -213,7 +214,9 @@ app.get("/users/:id", (req, res) => {
     }
 })
 app.post("/users/:id", (req, res) => {
-    res.send(req.user);
+    db.interact("UPDATE users SET username=$1, pfp=$2, colour=$3 WHERE _id=$4", 
+        [req.body.username, req.body.pfp, req.body.colour, req.user._id], (err, res) => {});
+    res.redirect("/app");
 })
 
 
