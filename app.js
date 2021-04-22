@@ -132,11 +132,11 @@ app.get("/signup", (req, res) => {
 // We add the user into our db here
 app.post("/signup", (req, res) => {
 	// encrypt our password and add into db
-    bcrypt.hash(req.body.password, 5, (hashErr, hash) => {
+    bcrypt.hash(req.body.password, parseInt(process.env.SALT_ROUNDS), (hashErr, hash) => {
         if(hashErr) {
             console.log("Unable to hash password: " + hashErr)
         } else {
-            db.addUser(req.body.username, hash, (success) => {
+            db.addUser(req.body.username, hash, req.body.pfp, req.body.colour, (success) => {
 				console.log("Insertion status: " + success);
                 if(success) {
                     res.redirect("/login");
