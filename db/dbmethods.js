@@ -24,7 +24,10 @@ module.exports = {                      // This is our interact method we're exp
         })
     },
 
-    addUser: (username, password, callback) => {
+    addUser: (username, password, pfp, colour, callback) => {
+        // Make sure pfp has a value
+        pfp = (pfp) ? pfp : "https://static.wikia.nocookie.net/59b26f0f-10bc-4aac-afe0-5372becc3674";
+        // Make sure the username doesn't already exist
         client.query("SELECT * FROM users WHERE username = $1", [username], (err, res) => {
             if(err) {
                 console.log(err)
@@ -33,7 +36,8 @@ module.exports = {                      // This is our interact method we're exp
 				console.log("User already exists!")
 				callback(false);
 			} else {
-				client.query("INSERT INTO users (username, password) VALUES($1, $2);", [username, password],
+				client.query("INSERT INTO users (username, password, pfp, colour) VALUES($1, $2, $3, $4);", 
+                [username, password, pfp, colour],
 				(insertionErr, insertionResponse) => {
 					if(insertionErr) {
 						console.log("Could not insert new user: " + insertionError);

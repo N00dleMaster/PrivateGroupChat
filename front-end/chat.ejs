@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="../css/chat.css">
     </head>
     <body>
-        <a href="users/<%=user._id%>">hehe</a>
+        <a href="/users/<%=user._id%>">hehe</a>
         <div id="contentWrapper">
             <div id="tabSwitcher">
                 <p id="general">General</p>
@@ -21,14 +21,17 @@
                 <!-- Loading messages from our DB -->
                 <% allGeneral.forEach(message => { %>
                     <li>
-                        <p class="messageAuthor"> <%=message.authorname%> </p>
-                        <p class="messageContent"><%=message.message%></p>
-                        <% if (message.authorid == user._id) { %>
-                            <div class="options">
-                                <p><%=message._id%></p>
-                                <button class="delete">delet</button>
-                            </div>
-                        <% } %>
+                        <img src="<%=message.pfp%>" alt="pfp" class="pfp">
+                        <div class="messageDiv">
+                            <p style="color:<%=message.colour%>;"class="messageAuthor"><%=message.username%></p>
+                            <p class="messageContent"><%=message.message%></p>
+                            <% if (message.authorid == user._id) { %>
+                                <div class="options">
+                                    <p><%=message._id%></p>
+                                    <button class="delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            <% } %>
+                        </div>
                     </li>
                 <% }) %>
                 <!-- We'll be appending messages here using code -->
@@ -37,11 +40,16 @@
                 <!-- Loading messages from our DB -->
                 <% allPrivate.forEach(message => { %>
                     <li>
-                        <p class="messageAuthor"> <%= message.authorname %> </p>
-                        <p class="messageContent"> <%= message.message %> </p>
-                        <div class="options">
-                            <p><%=message._id%></p>
-                            <button class="delete">delet</button>
+                        <img src="<%=message.pfp%>" alt="pfp" class="pfp">
+                        <div class="messageDiv">
+                            <p style="color:<%=message.colour%>;"class="messageAuthor"><%=message.username%></p>
+                            <p class="messageContent"><%=message.message%></p>
+                            <% if (message.authorid == user._id) { %>
+                                <div class="options">
+                                    <p><%=message._id%></p>
+                                    <button class="delete"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            <% } %>
                         </div>
                     </li>
                 <% }) %>
@@ -59,8 +67,10 @@
         <script>
             // EJS looks kind of ugly. We'll pass the necessary info to our
             // chat.js file in the following, hack-y way.
-            const username = "<%= user.username %>";
-            const userId = <%= user._id %>;
+            const username = "<%=user.username%>";
+            const userId = <%=user._id%>;
+            const pfp = "<%=user.pfp%>";
+            const colour = "<%=user.colour%>"
                 // Whatever is within these script tags, is now accessable within
                 // all our script tags, including the chat.js file, which is in a
                 // script tag right down below.
@@ -72,5 +82,8 @@
 
         <!-- This is the actual messing about we do using the socket.io capabilities -->
         <script src="../js/chat.js"></script>
+        
+        <!-- FontAwesome stuff -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
     </body>
 </html>

@@ -37,6 +37,15 @@
     border-bottom: 2px solid #161A1D;
     list-style: none;
 }
+.messageContent:hover + .options {
+    display: block;
+}
+.messageAuthor:hover ~ .options {
+    display: block;
+}
+.options:hover {
+    display:block;
+}
 .messages::-webkit-scrollbar{
     background-color:#161A1D;
     border-radius: 10px;
@@ -50,7 +59,25 @@
 .messageAuthor{
     font-weight: 900;
     font-size: 1.1rem;
-    margin: 0 0 0.25rem 0;
+    padding: 0 0 0.25rem 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
+.messages li {
+    display: flex;
+    flex-direction: row;
+}
+.messageDiv {
+    width: calc(100% - 3rem);
+    margin-left: 0.5rem;
+    height: 1px;
+}
+.pfp {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
 }
 .messageContent {
     margin: 0 0 0.125rem 0;
@@ -60,26 +87,34 @@
 
 /* For the little hover thingy we have on each of our messages */
 .options {
+    display: none;
     position:relative;
-    bottom: 20px;
+    bottom: 2rem;
     float:right;
-    height: 40px;
+    height: 1.5rem;
     width: 100px;
     background-color: #161A1D;
     border-radius: 0.5rem;
-}
-.options p {
-    display: none;
+    margin: 0;
 }
 .options button {
     border: none;
     background-color: transparent;
 }
+.options p {
+    display: none !important;
+}
+.delete {
+    font-size: 1.2rem;
+    color: red;
+}
 
+/* Misc. */
 .private {
     display: none;
 }
 
+/* Styling for the form */
 #form {
     width: 95%;
     display: flex;

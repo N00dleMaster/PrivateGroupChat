@@ -24,12 +24,10 @@ const io = require("socket.io")(http);      // Require socket.io, pass http serv
 // =================================== CLEANING THE DB EVERY DAY/WEEK ===================================
 const initialDate = new Date();         // A date to start us off
 let prevDay = initialDate.getDay();     // A day to start us off
-console.log(prevDay);
 setInterval(() => {
     const newDate = new Date();                             // Create date obj everytime it runs
     let day = newDate.getDay();                             // get the day
     let time = newDate.getHours() + newDate.getMinutes();   // Get hrs and minutes
-    console.log(day);
     if(day != prevDay) {                                    // If the day has changed, delete "sensitive" convo 
         db.deleteConversation("sensitive");
         prevDay = day;
@@ -87,10 +85,7 @@ passport.use(new LocalStrategy(
                     if(err) {
                         console.log(err);
                     } else if (wasCorrect) {
-                        return done(null, {
-                            id: user._id,
-                            user: user.username
-                        });
+                        return done(null, {id: user._id});
                     } else {
                         console.log("Password was incorrect");
                         return done(null, false, req.flash("error", "Password is incorrect."));
@@ -114,7 +109,7 @@ passport.serializeUser(function(user, done){
 
 // Deserializing is used on every subsequent request *after* the initial login
 passport.deserializeUser(function(id, done){
-    db.interact('SELECT _id, username FROM users WHERE _id = $1', [parseInt(id)], (err, res) => {
+    db.interact('SELECT _id, username, pfp, colour FROM users WHERE _id = $1', [parseInt(id)], (err, res) => {
         if(err) {
           return done(err)
         }
@@ -137,11 +132,11 @@ app.get("/signup", (req, res) => {
 // We add the user into our db here
 app.post("/signup", (req, res) => {
 	// encrypt our password and add into db
-    bcrypt.hash(req.body.password, 5, (hashErr, hash) => {
+    bcrypt.hash(req.body.password, parseInt(process.env.SALT_ROUNDS), (hashErr, hash) => {
         if(hashErr) {
             console.log("Unable to hash password: " + hashErr)
         } else {
-            db.addUser(req.body.username, hash, (success) => {
+            db.addUser(req.body.username, hash, req.body.pfp, req.body.colour, (success) => {
 				console.log("Insertion status: " + success);
                 if(success) {
                     res.redirect("/login");
@@ -186,7 +181,8 @@ app.get("/app", (req, res) => {
 		res.redirect("/login");
 	}
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
-    db.interact("SELECT * FROM messages", (err, dbRes) => {
+    db.interact("SELECT users.username, messages.message, messages.room, users.pfp, users.colour FROM users JOIN messages ON users._id=messages.authorid;",
+    (err, dbRes) => {
         if(err) {
             console.log(err);
         } else {
@@ -216,6 +212,11 @@ app.get("/users/:id", (req, res) => {
     } else {
         res.render(path.join(__dirname, "front-end", "settings.ejs"), {user: req.user});
     }
+})
+app.post("/users/:id", (req, res) => {
+    db.interact("UPDATE users SET username=$1, pfp=$2, colour=$3 WHERE _id=$4", 
+        [req.body.username, req.body.pfp, req.body.colour, req.user._id], (err, res) => {});
+    res.redirect("/app");
 })
 
 
@@ -247,6 +248,7 @@ io.on("connection", socket => {
         db.interact(
             "INSERT INTO messages (authorid, authorname, message, room) VALUES ($1, $2, $3, $4) RETURNING *",
             [authorId, author, msg, room], (err, res) => {
+                console.log(err);
                 // io.emit() emits information to *all* the connected sockets. This is then
                 // handled *again* on the client side. (see index.html)
                 io.to(room).emit("chat_message", authorId, author, res.rows[0]._id, msg);

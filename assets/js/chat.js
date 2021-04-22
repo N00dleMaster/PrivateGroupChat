@@ -82,24 +82,36 @@ socket.on("delete", (msgId) => {
     // We start from the end of array bcs the message is more likely to be near the start
     for(let i=msgs.length-1; i>=0; i--) {
         if(parseInt(msgs[i].innerText) === msgId) {
-            msgs[i].parentElement.parentElement.remove();
+            msgs[i].parentElement.parentElement.parentElement.remove();
         }
     }
 })
 
 
 // ================================== MISC FUNCTIONS ==================================
+// authorId, author, res.rows[0]._id, msg
 function createMsg(msg, msgId, author, chat) {
     // Create new element, append to ul
     const newMsg = document.createElement("li");
 
+    const img = document.createElement("img");
+    img.src = pfp;
+    img.alt = "pfp";
+    img.classList.add("pfp");
+
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("messageDiv");
+
     const authorTitle = document.createElement("p");
     authorTitle.classList.add("messageAuthor");
     authorTitle.innerText = author;
-
+    authorTitle.style.color = colour;
     const msgContent = document.createElement("p");
     msgContent.classList.add("messageContent");
     msgContent.innerText = msg;
+
+    messageDiv.appendChild(authorTitle);
+    messageDiv.appendChild(msgContent);
 
     const options = document.createElement("div");
     options.classList.add("options");
@@ -111,10 +123,10 @@ function createMsg(msg, msgId, author, chat) {
     attachDeleteBtnEventListener(deleteBtn);
     options.appendChild(info);
     options.appendChild(deleteBtn);
-
-    newMsg.appendChild(authorTitle);
-    newMsg.appendChild(msgContent);
-    newMsg.appendChild(options);
+    
+    newMsg.appendChild(img);
+    newMsg.appendChild(messageDiv);
+    messageDiv.appendChild(options);
 
     if(chat == "general") {
         generalMessages.appendChild(newMsg);
