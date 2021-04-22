@@ -97,7 +97,7 @@ function createMsg(msg, msgId, author, chat) {
     const img = document.createElement("img");
     img.src = pfp;
     img.alt = "pfp";
-    img.classList.add("pfp");
+    img.classList.add("pfp")
 
     const messageDiv = document.createElement("div");
     messageDiv.classList.add("messageDiv");
