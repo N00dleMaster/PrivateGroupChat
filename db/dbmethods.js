@@ -13,7 +13,7 @@ const client = new Pool({               // Establishing connection
     // database: process.env.DATABASE_NAME,
     // password: process.env.DATABASE_PASS,
     // port:     process.env.DATABASE_PORT
-    connectionString: "postgres://gwpukowf:oiL3sci2zN1Lp6eMXrXPO3Tvv_sRJ1U2@queenie.db.elephantsql.com:5432/gwpukowf"
+    connectionString: process.env.DATABASE_URL
 });
 
 client.connect();                       // Connecting

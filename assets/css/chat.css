@@ -106,12 +106,19 @@
 }
 .delete {
     font-size: 1.2rem;
-    color: red;
+    color: #660708;
 }
 
 /* Misc. */
 .private {
     display: none;
+}
+#settings {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.2rem;
+    color: #660708;
 }
 
 /* Styling for the form */
