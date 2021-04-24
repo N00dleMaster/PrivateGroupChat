@@ -118,7 +118,7 @@ function createMsg(msg, msgId, author, chat) {
     const info = document.createElement("p");
     info.innerText = msgId;
     const deleteBtn = document.createElement("button");
-    deleteBtn.innerText = "delet";
+    deleteBtn.innerHTML = "<i class='fas fa-trash-alt'></i>";
     deleteBtn.classList.add("delete");
     attachDeleteBtnEventListener(deleteBtn);
     options.appendChild(info);

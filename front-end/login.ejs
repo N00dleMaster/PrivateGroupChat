@@ -11,7 +11,7 @@
     </head>
     <body>
 
-        <h1>Join in the revelry, human!</h1>
+        <h1>Log in</h1>
         <h4> <%= status %> </h4>
 
         <form id="loginForm" action="/login" method="POST">
@@ -19,6 +19,8 @@
             <input placeholder="Password" name="password" type="password">
             <button>Log in</button>
         </form>
+
+        <h4>Don't have an account? <a href="/signup">Sign up.</a></h4>
         
     </body>
 </html>

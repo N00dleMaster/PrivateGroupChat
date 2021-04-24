@@ -181,7 +181,7 @@ app.get("/app", (req, res) => {
 		res.redirect("/login");
 	}
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
-    db.interact("SELECT users.username, messages.message, messages.room, users.pfp, users.colour FROM users JOIN messages ON users._id=messages.authorid;",
+    db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message, messages.room FROM users JOIN messages ON users._id=messages.authorid;",
     (err, dbRes) => {
         if(err) {
             console.log(err);
@@ -248,7 +248,6 @@ io.on("connection", socket => {
         db.interact(
             "INSERT INTO messages (authorid, authorname, message, room) VALUES ($1, $2, $3, $4) RETURNING *",
             [authorId, author, msg, room], (err, res) => {
-                console.log(err);
                 // io.emit() emits information to *all* the connected sockets. This is then
                 // handled *again* on the client side. (see index.html)
                 io.to(room).emit("chat_message", authorId, author, res.rows[0]._id, msg);
