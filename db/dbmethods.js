@@ -8,11 +8,12 @@ require("dotenv").config({              // For retrieving environment variables 
 });
 
 const client = new Pool({               // Establishing connection
-    user:     process.env.DATABASE_USERNAME,
-    host:     process.env.HOST,
-    database: process.env.DATABASE_NAME,
-    password: process.env.DATABASE_PASS,
-    port:     process.env.DATABASE_PORT
+    // user:     process.env.DATABASE_USERNAME,
+    // host:     process.env.HOST,
+    // database: process.env.DATABASE_NAME,
+    // password: process.env.DATABASE_PASS,
+    // port:     process.env.DATABASE_PORT
+    connectionString: "postgres://gwpukowf:oiL3sci2zN1Lp6eMXrXPO3Tvv_sRJ1U2@queenie.db.elephantsql.com:5432/gwpukowf"
 });
 
 client.connect();                       // Connecting
@@ -40,7 +41,7 @@ module.exports = {                      // This is our interact method we're exp
                 [username, password, pfp, colour],
 				(insertionErr, insertionResponse) => {
 					if(insertionErr) {
-						console.log("Could not insert new user: " + insertionError);
+						console.log("Could not insert new user: " + insertionErr);
 						callback(false);
 					} else {
 						console.log(insertionResponse);
