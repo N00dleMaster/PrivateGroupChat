@@ -1,5 +1,5 @@
 // This is the client-side socket connection we need to establish
-const socket = io.connect("http://localhost:8080");
+const socket = io.connect();
 
 // All our DOM elements
 const generalMessages = document.querySelector(".general");
