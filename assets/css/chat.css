@@ -71,7 +71,7 @@
 .messageDiv {
     width: calc(100% - 3rem);
     margin-left: 0.5rem;
-    height: 1px;
+    /* height: 1px; */
 }
 .pfp {
     width: 3rem;
