@@ -272,6 +272,6 @@ io.on("connection", socket => {
 
 
 // Initializing the server on localhost for now.
-http.listen(process.env.PORT || "5000", () => {
-    console.log("Listening on port 8080");
+http.listen(process.env.PORT || 80, () => {
+    console.log("Listening on port 5000");
 }); 
