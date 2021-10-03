@@ -21,7 +21,7 @@ scrollBottom();     // On page load, we want the user to be scrolled to the bott
 // ==================================== EVENT LISTENERS ====================================
 // For sending message
 form.addEventListener('submit', (e) => {
-    e.preventDefault(); // Prevents the form from reloading page (default behaviour)
+    e.preventDefault(); // Prevents the form from reloading page (which is the form's default behaviour)
     if (input.value) {
         // This emits a "chat_message" event to a certain room, which we define and handle below and on back-end
         socket.emit('chat_message', userId, username, input.value, room);
@@ -31,32 +31,6 @@ form.addEventListener('submit', (e) => {
 
 document.querySelectorAll(".delete").forEach((btn) => {
     attachDeleteBtnEventListener(btn);
-})
-
-// For switching btwn #general and #sensitive channels
-general.addEventListener('click', (e) => {
-    room = "general";  // Set room to "general"
-    // Change background colour of tab; hide the sensitive chat ul
-    general.style.backgroundColor = "#0B090A";
-    generalMessages.style.display = "inherit";
-    // Change background colour of tab; hide general chat ul
-    sensitive.style.backgroundColor = "#161A1D";
-    sensitiveMessages.style.display = "none";
-    // Emit a room change event, handled on back-end
-    socket.emit("room", room);
-    scrollBottom();
-})
-sensitive.addEventListener('click', (e) => {
-    room = "sensitive"; // set room to "sensitive"
-    // Change background colour of tab; hide the sensitive chat ul
-    sensitive.style.backgroundColor = "#0B090A";
-    sensitiveMessages.style.display = "inherit";
-    // Change background colour of tab; hide general chat ul
-    general.style.backgroundColor = "#161A1D";
-    generalMessages.style.display = "none";
-    // Emit a room change event, handled on back-end
-    socket.emit("room", room);
-    scrollBottom();
 })
 
 

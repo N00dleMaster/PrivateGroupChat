@@ -12,10 +12,6 @@
     <body> 
         <a id="settings" href="/users/<%=user._id%>"><i class="fas fa-cogs"></i></a>
         <div id="contentWrapper">
-            <div id="tabSwitcher">
-                <p id="general">General</p>
-                <p id="sensitive">Sensitive</p>
-            </div>
 
             <ul class="general messages">
                 <!-- Loading messages from our DB -->
@@ -36,25 +32,7 @@
                 <% }) %>
                 <!-- We'll be appending messages here using code -->
             </ul>
-            <ul class="private messages">
-                <!-- Loading messages from our DB -->
-                <% allPrivate.forEach(message => { %>
-                    <li>
-                        <img src="<%=message.pfp%>" alt="pfp" class="pfp">
-                        <div class="messageDiv">
-                            <p style="color:<%=message.colour%>;"class="messageAuthor"><%=message.username%></p>
-                            <p class="messageContent"><%=message.message%></p>
-                            <% if (message.authorid == user._id) { %>
-                                <div class="options">
-                                    <p><%=message._id%></p>
-                                    <button class="delete"><i class="fas fa-trash-alt"></i></button>
-                                </div>
-                            <% } %>
-                        </div>
-                    </li>
-                <% }) %>
-                <!-- We'll be appending messages here using code -->
-            </ul>
+            
         </div>
 
         

@@ -4,31 +4,9 @@
     margin-left: 2.5%;
 }
 
-/* Allows to switch between general and private chat */
-#tabSwitcher {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-#tabSwitcher p {
-    width: 50%;
-    height: 3rem;   
-    box-sizing: border-box;
-    padding-top: 0.8rem;
-    text-align: center;
-    background-color: #0B090A;
-    margin: 1rem 0.25rem 0 0.25rem;
-    border-radius: 1rem 1rem 0 0;
-}
-#tabSwitcher p:last-child {
-    background-color: #161A1D;
-}
-
 /* Where our messages go */
 .messages {
     width: 100%;
-    height: 75vh;
-    overflow-y: scroll;
     padding: 0;
 }
 .messages li {
