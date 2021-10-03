@@ -181,23 +181,14 @@ app.get("/app", (req, res) => {
 		res.redirect("/login");
 	}
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
-    db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message, messages.room FROM users JOIN messages ON users._id=messages.authorid;",
+    db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message FROM users JOIN messages ON users._id=messages.authorid;",
     (err, dbRes) => {
         if(err) {
             console.log(err);
         } else {
             console.log("Successfully loaded messages.");
-            let allPrivate = [];
-            let allGeneral = [];
-            dbRes.rows.forEach((result) => {
-                if(result.room == "sensitive") {
-                    allPrivate.push(result);
-                } else {
-                    allGeneral.push(result);
-                }
-            })
             res.render(path.join(__dirname, "front-end", "chat.ejs"), 
-                {allPrivate: allPrivate, allGeneral: allGeneral, user: req.user});
+                {messages: dbRes.rows, user: req.user});
         }
     })
 })

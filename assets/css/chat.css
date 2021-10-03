@@ -10,6 +10,7 @@
     padding: 0;
 }
 .messages li {
+    position: relative;
     box-sizing: border-box;
     padding: 0.5rem;
     border-bottom: 2px solid #161A1D;
@@ -20,9 +21,6 @@
 }
 .messageAuthor:hover ~ .options {
     display: block;
-}
-.options:hover {
-    display:block;
 }
 .messages::-webkit-scrollbar{
     background-color:#161A1D;
@@ -66,14 +64,17 @@
 /* For the little hover thingy we have on each of our messages */
 .options {
     display: none;
-    position:relative;
-    bottom: 2rem;
-    float:right;
+    position:absolute;
+    right: 0;
+    top: 0.5rem;
     height: 1.5rem;
     width: 100px;
     background-color: #161A1D;
     border-radius: 0.5rem;
     margin: 0;
+}
+.options:hover {
+    display:block;
 }
 .options button {
     border: none;

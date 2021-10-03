@@ -13,9 +13,9 @@
         <a id="settings" href="/users/<%=user._id%>"><i class="fas fa-cogs"></i></a>
         <div id="contentWrapper">
 
-            <ul class="general messages">
+            <ul class="messages">
                 <!-- Loading messages from our DB -->
-                <% allGeneral.forEach(message => { %>
+                <% messages.forEach(message => { %>
                     <li>
                         <img src="<%=message.pfp%>" alt="pfp" class="pfp">
                         <div class="messageDiv">
