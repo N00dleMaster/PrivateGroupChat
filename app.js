@@ -233,15 +233,15 @@ io.on("connection", socket => {
     // index.js. Submitting the form triggers
     // a "chat_message" event which we define. This event is a socket event,
     // and is handled here.
-    socket.on("chat_message", (authorId, author, msg, room) => {
+    socket.on("chat_message", (authorId, author, msg) => {
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
         db.interact(
-            "INSERT INTO messages (authorid, authorname, message, room) VALUES ($1, $2, $3, $4) RETURNING *",
-            [authorId, author, msg, room], (err, res) => {
+            "INSERT INTO messages (authorid, authorname, message, room) VALUES ($1, $2, $3, 'general') RETURNING *",
+            [authorId, author, msg], (err, res) => {
                 // io.emit() emits information to *all* the connected sockets. This is then
                 // handled *again* on the client side. (see index.html)
-                io.to(room).emit("chat_message", authorId, author, res.rows[0]._id, msg);
+                io.to("general").emit("chat_message", authorId, author, res.rows[0]._id, msg);
             }
         );
     });

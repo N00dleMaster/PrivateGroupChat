@@ -2,8 +2,7 @@
 const socket = io.connect();
 
 // All our DOM elements
-const generalMessages = document.querySelector(".general");
-const sensitiveMessages = document.querySelector(".private");
+const messages = document.querySelector(".messages");
 
 const form = document.getElementById('form');
 const input = document.getElementById('input');
@@ -24,7 +23,7 @@ form.addEventListener('submit', (e) => {
     e.preventDefault(); // Prevents the form from reloading page (which is the form's default behaviour)
     if (input.value) {
         // This emits a "chat_message" event to a certain room, which we define and handle below and on back-end
-        socket.emit('chat_message', userId, username, input.value, room);
+        socket.emit('chat_message', userId, username, input.value);
         input.value = '';
     }
 });
@@ -46,7 +45,7 @@ socket.on("connect", () => {
 
 // On a chat message event, we do this:
 socket.on("chat_message", (authorId, author, msgId, msg) => {
-    createMsg(msg, msgId, author, room);
+    createMsg(msg, msgId, author);
     scrollBottom()
 });
 
@@ -64,7 +63,7 @@ socket.on("delete", (msgId) => {
 
 // ================================== MISC FUNCTIONS ==================================
 // authorId, author, res.rows[0]._id, msg
-function createMsg(msg, msgId, author, chat) {
+function createMsg(msg, msgId, author) {
     // Create new element, append to ul
     const newMsg = document.createElement("li");
 
@@ -102,11 +101,8 @@ function createMsg(msg, msgId, author, chat) {
     newMsg.appendChild(messageDiv);
     messageDiv.appendChild(options);
 
-    if(chat == "general") {
-        generalMessages.appendChild(newMsg);
-    } else {
-        sensitiveMessages.appendChild(newMsg);
-    }
+    messages.append(newMsg);
+    scrollBottom();
 }
 
 function attachDeleteBtnEventListener(btn) {
@@ -118,5 +114,5 @@ function attachDeleteBtnEventListener(btn) {
 }
 
 function scrollBottom() {
-    generalMessages.scrollTop = generalMessages.scrollHeight;
+    document.querySelector("body").scrollTop = document.querySelector("body").scrollHeight;
 }
