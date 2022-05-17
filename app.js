@@ -237,10 +237,10 @@ io.on("connection", socket => {
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
         db.interact(
-            "INSERT INTO messages (authorid, authorname, message, room) VALUES ($1, $2, $3, 'general') RETURNING *",
+            "INSERT INTO messages (authorid, authorname, message) VALUES ($1, $2, $3) RETURNING *",
             [authorId, author, msg], (err, res) => {
                 // io.emit() emits information to *all* the connected sockets. This is then
-                // handled *again* on the client side. (see index.html)
+                // handled *again* on the client side. (see chat.js)
                 io.to("general").emit("chat_message", authorId, author, res.rows[0]._id, msg);
             }
         );
