@@ -22,20 +22,20 @@ const io = require("socket.io")(http);      // Require socket.io, pass http serv
 
 
 // =================================== CLEANING THE DB EVERY DAY/WEEK ===================================
-const initialDate = new Date();         // A date to start us off
-let prevDay = initialDate.getDay();     // A day to start us off
-setInterval(() => {
-    const newDate = new Date();                             // Create date obj everytime it runs
-    let day = newDate.getDay();                             // get the day
-    let time = newDate.getHours() + newDate.getMinutes();   // Get hrs and minutes
-    if(day != prevDay) {                                    // If the day has changed, delete "sensitive" convo 
-        db.deleteConversation("sensitive");
-        prevDay = day;
-    }
-    if(day == 0 && time == "0000") {                         // If it's a new week, delete the "general" convo
-        db.deleteConversation("general");
-    }
-}, 60000)                                   // This func. runs every minute
+// const initialDate = new Date();         // A date to start us off
+// let prevDay = initialDate.getDay();     // A day to start us off
+// setInterval(() => {
+//     const newDate = new Date();                             // Create date obj everytime it runs
+//     let day = newDate.getDay();                             // get the day
+//     let time = newDate.getHours() + newDate.getMinutes();   // Get hrs and minutes
+//     if(day != prevDay) {                                    // If the day has changed, delete "sensitive" convo 
+//         db.deleteConversation("sensitive");
+//         prevDay = day;
+//     }
+//     if(day == 0 && time == "0000") {                         // If it's a new week, delete the "general" convo
+//         db.deleteConversation("general");
+//     }
+// }, 60000)                                   // This func. runs every minute
 
 
 
@@ -181,12 +181,13 @@ app.get("/app", (req, res) => {
 		res.redirect("/login");
 	}
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
-    db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message FROM users JOIN messages ON users._id=messages.authorid;",
+    db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message FROM users JOIN messages ON users._id=messages.authorid WHERE messages.room_id=1;",
     (err, dbRes) => {
         if(err) {
             console.log(err);
         } else {
             console.log("Successfully loaded messages.");
+            console.log(req.user._id)
             res.render(path.join(__dirname, "front-end", "chat.ejs"), 
                 {messages: dbRes.rows, user: req.user});
         }
@@ -221,11 +222,13 @@ app.get("/logout", (req, res) => {
 // Each connection makes a new instance of the socket object
 // Within here, we can handle all sorts of events that will be received from the client-side
 // (whenver a person connects or interacts with the webpage) 
-io.on("connection", socket => {       
+io.on("connection", socket => {
+
     console.log("A wild user appeared! ");
 
     // This event is for changing rooms
     socket.on("room", (room) => {
+        currentRoom = this.room;
         socket.join(room);
     })
 
@@ -233,15 +236,15 @@ io.on("connection", socket => {
     // index.js. Submitting the form triggers
     // a "chat_message" event which we define. This event is a socket event,
     // and is handled here.
-    socket.on("chat_message", (authorId, author, msg) => {
+    socket.on("chat_message", (authorId, author, msg, room_id) => {
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
         db.interact(
-            "INSERT INTO messages (authorid, authorname, message) VALUES ($1, $2, $3) RETURNING *",
-            [authorId, author, msg], (err, res) => {
+            "INSERT INTO messages (authorid, authorname, message, room_id) VALUES ($1, $2, $3, $4) RETURNING *",
+            [authorId, author, msg, room_id], (err, res) => {
                 // io.emit() emits information to *all* the connected sockets. This is then
                 // handled *again* on the client side. (see chat.js)
-                io.to("general").emit("chat_message", authorId, author, res.rows[0]._id, msg);
+                io.to(room_id).emit("chat_message", authorId, author, res.rows[0]._id, msg);
             }
         );
     });

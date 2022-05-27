@@ -1,6 +1,9 @@
 // This is the client-side socket connection we need to establish
 const socket = io.connect();
 
+// This variable keeps track (by id) of what room the client is on
+let room_id = "1"; // This is the global room we join on page load.
+
 // All our DOM elements
 const messages = document.querySelector(".messages");
 
@@ -23,7 +26,7 @@ form.addEventListener('submit', (e) => {
     e.preventDefault(); // Prevents the form from reloading page (which is the form's default behaviour)
     if (input.value) {
         // This emits a "chat_message" event to a certain room, which we define and handle below and on back-end
-        socket.emit('chat_message', userId, username, input.value);
+        socket.emit('chat_message', userId, username, input.value, room_id);
         input.value = '';
     }
 });
@@ -36,16 +39,16 @@ document.querySelectorAll(".delete").forEach((btn) => {
 
 // ==================================== SOCKET.IO EVENTS ====================================
 // See the app.js file for the backend handling of each event
-let room = "general"; // This is the room we join on page load.
+
 
 // On connection, we do this:
 socket.on("connect", () => {
-    socket.emit("room", room);  // The "Room" event is handled exclusively on the back-end.
+    socket.emit("room", room_id);  // The "Room" event is handled exclusively on the back-end.
 })
 
 // On a chat message event, we do this:
 socket.on("chat_message", (authorId, author, msgId, msg) => {
-    createMsg(msg, msgId, author);
+    createMsg(msg, msgId);
     scrollBottom()
 });
 
