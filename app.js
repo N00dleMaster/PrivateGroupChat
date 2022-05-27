@@ -187,7 +187,7 @@ app.get("/app", (req, res) => {
             console.log(err);
         } else {
             console.log("Successfully loaded messages.");
-            console.log(req.user._id)
+            console.log(req.user);
             res.render(path.join(__dirname, "front-end", "chat.ejs"), 
                 {messages: dbRes.rows, user: req.user});
         }

@@ -48,7 +48,7 @@ socket.on("connect", () => {
 
 // On a chat message event, we do this:
 socket.on("chat_message", (authorId, author, msgId, msg) => {
-    createMsg(msg, msgId);
+    createMsg(msg, msgId, author);
     scrollBottom()
 });
 
