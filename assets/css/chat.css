@@ -75,7 +75,7 @@
 .options {
     display: none;
 }
-.messageAuthor:hover ~ .options {
+.messageDiv:hover span p ~ .options {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -87,7 +87,7 @@
     border-radius: 0.3rem;
     margin: 0;
 }
-.messageAuthor:hover ~ .options button{
+.messageDiv:hover span p ~ .options button{
     font-size: 1rem;
 }
 .options button {

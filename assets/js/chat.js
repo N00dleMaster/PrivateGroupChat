@@ -51,7 +51,7 @@ socket.on("delete", (msgId) => {
     // We start from the end of array bcs the message is more likely to be near the start
     for(let i=msgs.length-1; i>=0; i--) {
         if(parseInt(msgs[i].innerText) === msgId) {
-            msgs[i].parentElement.parentElement.parentElement.remove();
+            msgs[i].parentElement.parentElement.parentElement.parentElement.remove();
         }
     }
 })
@@ -71,16 +71,12 @@ function createMsg(msg, msgId, author, chat) {
     const messageDiv = document.createElement("div");
     messageDiv.classList.add("messageDiv");
 
+    const authorAndOptions = document.createElement("span");
     const authorTitle = document.createElement("p");
     authorTitle.classList.add("messageAuthor");
     authorTitle.innerText = author;
     authorTitle.style.color = colour;
-    const msgContent = document.createElement("p");
-    msgContent.classList.add("messageContent");
-    msgContent.innerText = msg;
-
-    messageDiv.appendChild(authorTitle);
-    messageDiv.appendChild(msgContent);
+    authorAndOptions.appendChild(authorTitle);
 
     const options = document.createElement("div");
     options.classList.add("options");
@@ -92,10 +88,18 @@ function createMsg(msg, msgId, author, chat) {
     attachDeleteBtnEventListener(deleteBtn);
     options.appendChild(info);
     options.appendChild(deleteBtn);
+    authorAndOptions.appendChild(options);
+
+    const msgContent = document.createElement("p");
+    msgContent.classList.add("messageContent");
+    msgContent.innerText = msg;
+
+    messageDiv.appendChild(authorAndOptions);
+    messageDiv.appendChild(msgContent);
+
     
     newMsg.appendChild(img);
     newMsg.appendChild(messageDiv);
-    messageDiv.appendChild(options);
 
     messages.appendChild(newMsg);
 }
