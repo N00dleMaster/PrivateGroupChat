@@ -13,7 +13,25 @@
         <div id="menu">
             <a id="settings" href="/users/<%=user._id%>"><i class="fas fa-cogs"></i></a>
         </div>
+
+        <!-- This'll contain both our sidebar showing all chatrooms the user has available and the actual current chatroom. -->
         <div id="contentWrapper">
+
+            <!-- This'll contain all the chatrooms the user has available. -->
+            <ul class="sidebar">
+                <li class="sidebarHeader">
+                    <h2>Chatrooms</h2>
+                    <a href="/users/<%=user._id%>"><i class="fas fa-cogs"></i></a>
+                </li>
+                <% rooms.forEach(chatroom => { %>
+                    <li class="sidebarChatroom">
+                        <a href="/chat/<%=chatroom._id%>">
+                            <img src="<%=chatroom.pfp%>" alt="pfp" class="pfp">
+                            <p class="chatroomName"><%=chatroom.name%></p>
+                        </a>
+                    </li>
+                <% }) %>
+            </ul>
 
             <!-- Right now just append all the messages like below but without the distinction between private and general -->
             <ul class="messages">

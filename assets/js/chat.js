@@ -32,7 +32,7 @@ document.querySelectorAll(".delete").forEach((btn) => {
 
 // ==================================== SOCKET.IO EVENTS ====================================
 // See the app.js file for the backend handling of each event
-let room = "general"; // This is the room we join on page load.
+let room = 1; // This is the room we join on page load.
 
 // On connection, we do this:
 socket.on("connect", () => {

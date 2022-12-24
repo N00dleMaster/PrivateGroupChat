@@ -78,9 +78,9 @@ passport.use(new LocalStrategy(
             if(err) {
                 console.log(err);
                 return done(err);
-            } else if(res.rowCount > 0) {
+            } else if(res.length > 0) {
                 console.log("Got user!")
-                user = res.rows[0];
+                user = res[0];
                 bcrypt.compare(password, user.password, (err, wasCorrect) => {
                     if(err) {
                         console.log(err);
@@ -113,7 +113,7 @@ passport.deserializeUser(function(id, done){
         if(err) {
           return done(err)
         }
-        return done(null, res.rows[0])
+        return done(null, res[0])
 	});
 });
 
@@ -175,23 +175,57 @@ app.post("/login", passport.authenticate("local", {
 })
 
 
-// The actual app where the chatting happens.
+
+// Here we redirect the user to the actual room they are supposed to be in
 app.get("/app", (req, res) => {
 	if(!req.user) {
 		res.redirect("/login");
-	}
+	} else {
+        res.redirect("/app/rooms/1");
+    }
+})
+
+
+
+// THIS IS THE ACTUAL APP
+app.get("/app/rooms/:id", async (req, res) => {
+    if(req.user == undefined) {
+        res.redirect("/login");
+        return;
+    }
+
+    // First, we'll get all the rooms the user has associated with their account.
+    const user_rooms = await db.getRooms(req.user._id); // custom method in our dbmethods file.
+    console.log("user rooms is " + user_rooms);
+
+    // Then, we'll check if the user is in the room they are trying to access. If not, redirect.
+    // room "1" is accessible by everyone; this is the global chat.
+    let user_in_room = false;
+    for(let i = 0; i < user_rooms.length; i++) {
+        if(user_rooms[i]._id == req.params.id) {
+            user_in_room = true;
+            break;
+        }
+    }
+    if(!user_in_room && req.params.id != 1) {
+        res.redirect("/app/rooms/1");
+    }
+
+    console.log(user_rooms);
+
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
-    db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message FROM users JOIN messages ON users._id=messages.authorid;",
-    (err, dbRes) => {
+    db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message FROM users JOIN messages ON users._id=messages.authorid WHERE room_id=$1;",
+    [req.params.id], (err, dbRes) => {
         if(err) {
             console.log(err);
         } else {
             console.log("Successfully loaded messages.");
             res.render(path.join(__dirname, "front-end", "chat.ejs"), 
-                {msgs: dbRes.rows, user: req.user});
+                {msgs: dbRes, rooms: user_rooms, user: req.user});
         }
     })
 })
+
 
 
 // User settings, where you can do stuff
@@ -211,6 +245,7 @@ app.post("/users/:id", (req, res) => {
 })
 
 
+
 app.get("/logout", (req, res) => {
 	req.logout();
 	res.redirect("/login");
@@ -226,6 +261,7 @@ io.on("connection", socket => {
 
     // This event is for changing rooms
     socket.on("room", (room) => {
+        console.log("new room joined: " + room);    
         socket.join(room);
     })
 
