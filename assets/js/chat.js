@@ -2,14 +2,9 @@
 const socket = io.connect();
 
 // All our DOM elements
-const generalMessages = document.querySelector(".general");
-const sensitiveMessages = document.querySelector(".private");
-
+const messages = document.querySelector('.messages');
 const form = document.getElementById('form');
 const input = document.getElementById('input');
-
-const general = document.getElementById("general");
-const sensitive = document.getElementById("sensitive");
 
 scrollBottom();     // On page load, we want the user to be scrolled to the bottom by default.
 
@@ -31,32 +26,6 @@ form.addEventListener('submit', (e) => {
 
 document.querySelectorAll(".delete").forEach((btn) => {
     attachDeleteBtnEventListener(btn);
-})
-
-// For switching btwn #general and #sensitive channels
-general.addEventListener('click', (e) => {
-    room = "general";  // Set room to "general"
-    // Change background colour of tab; hide the sensitive chat ul
-    general.style.backgroundColor = "#0B090A";
-    generalMessages.style.display = "inherit";
-    // Change background colour of tab; hide general chat ul
-    sensitive.style.backgroundColor = "#161A1D";
-    sensitiveMessages.style.display = "none";
-    // Emit a room change event, handled on back-end
-    socket.emit("room", room);
-    scrollBottom();
-})
-sensitive.addEventListener('click', (e) => {
-    room = "sensitive"; // set room to "sensitive"
-    // Change background colour of tab; hide the sensitive chat ul
-    sensitive.style.backgroundColor = "#0B090A";
-    sensitiveMessages.style.display = "inherit";
-    // Change background colour of tab; hide general chat ul
-    general.style.backgroundColor = "#161A1D";
-    generalMessages.style.display = "none";
-    // Emit a room change event, handled on back-end
-    socket.emit("room", room);
-    scrollBottom();
 })
 
 
@@ -128,11 +97,7 @@ function createMsg(msg, msgId, author, chat) {
     newMsg.appendChild(messageDiv);
     messageDiv.appendChild(options);
 
-    if(chat == "general") {
-        generalMessages.appendChild(newMsg);
-    } else {
-        sensitiveMessages.appendChild(newMsg);
-    }
+    messages.appendChild(newMsg);
 }
 
 function attachDeleteBtnEventListener(btn) {
@@ -144,5 +109,5 @@ function attachDeleteBtnEventListener(btn) {
 }
 
 function scrollBottom() {
-    generalMessages.scrollTop = generalMessages.scrollHeight;
+    messages.scrollTop = messages.scrollHeight;
 }

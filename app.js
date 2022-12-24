@@ -97,7 +97,7 @@ passport.use(new LocalStrategy(
             }
         })
     }
-));
+))
 
 // Serializing the user into a session (giving a cookie to browser)
 passport.serializeUser(function(user, done){
@@ -181,23 +181,14 @@ app.get("/app", (req, res) => {
 		res.redirect("/login");
 	}
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
-    db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message, messages.room FROM users JOIN messages ON users._id=messages.authorid;",
+    db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message FROM users JOIN messages ON users._id=messages.authorid;",
     (err, dbRes) => {
         if(err) {
             console.log(err);
         } else {
             console.log("Successfully loaded messages.");
-            let allPrivate = [];
-            let allGeneral = [];
-            dbRes.rows.forEach((result) => {
-                if(result.room == "sensitive") {
-                    allPrivate.push(result);
-                } else {
-                    allGeneral.push(result);
-                }
-            })
             res.render(path.join(__dirname, "front-end", "chat.ejs"), 
-                {allPrivate: allPrivate, allGeneral: allGeneral, user: req.user});
+                {msgs: dbRes.rows, user: req.user});
         }
     })
 })
@@ -246,11 +237,15 @@ io.on("connection", socket => {
         // Because socket.io also has this handler on the backend, we can append the new
         // message to our database!!!! Epic.
         db.interact(
-            "INSERT INTO messages (authorid, authorname, message, room) VALUES ($1, $2, $3, $4) RETURNING *",
-            [authorId, author, msg, room], (err, res) => {
-                // io.emit() emits information to *all* the connected sockets. This is then
-                // handled *again* on the client side. (see index.html)
-                io.to(room).emit("chat_message", authorId, author, res.rows[0]._id, msg);
+            "INSERT INTO messages (authorid, authorname, message, room_id) VALUES ($1, $2, $3, $4) RETURNING *",
+            [authorId, author, msg, 1], (err, res) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    // io.emit() emits information to *all* the connected sockets. This is then
+                    // handled *again* on the client side. (see index.html)
+                    io.to(room).emit("chat_message", authorId, author, res.rows[0]._id, msg);
+                }
             }
         );
     });
