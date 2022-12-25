@@ -10,7 +10,7 @@ h4 {
     color:#bd3f43;
 }
 
-#loginForm {
+#form {
     display:flex;
     flex-direction: column;
     align-items: center;
@@ -18,7 +18,7 @@ h4 {
     width: 30rem;
 }
 
-#loginForm input {
+#form input {
     width: 100%;
     padding: 0.5rem;
     margin-bottom: 1rem;
@@ -30,7 +30,7 @@ h4 {
     border: 3px solid #660708;
 }
 
-#loginForm button {
+#form button {
     width: 10rem;
     height: 3rem;
     font-size: 1.5rem;
