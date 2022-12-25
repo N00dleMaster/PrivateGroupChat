@@ -8,6 +8,11 @@
     flex-direction: row;
     align-items: center;
 }
+.menu--item {
+    font-size: 1.2rem;
+    color: #660708;
+    margin: 0 5%;
+}
 
 
 /* Will wrap both our sidebar (to be added) and our messages */
@@ -136,17 +141,6 @@
 .sidebarChatroom a {
     text-decoration: none;
     color: white;
-}
-
-
-
-/* Misc. */
-.private {
-    display: none;
-}
-#settings {
-    font-size: 1.2rem;
-    color: #660708;
 }
 
 

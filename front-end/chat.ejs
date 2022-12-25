@@ -11,7 +11,9 @@
     </head>
     <body> 
         <div id="menu">
-            <a id="settings" href="/users/<%=user._id%>"><i class="fas fa-cogs"></i></a>
+            <a class="menu--item" href="/users/<%=user._id%>"><i class="fas fa-cogs"></i></a>
+            <a class="menu--item" href="/logout"><i class="fas fa-sign-out-alt"></i></a>
+            <a class="menu--item" href="/app/newroom"><i class="fas fa-plus"></i></a>
         </div>
 
         <!-- This'll contain both our sidebar showing all chatrooms the user has available and the actual current chatroom. -->

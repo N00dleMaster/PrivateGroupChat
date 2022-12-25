@@ -238,6 +238,16 @@ app.post("/users/:id", (req, res) => {
 
 
 
+// Allows you to create a new room
+app.get("/app/newroom", (req, res) => {
+    if(!req.user) {
+        res.redirect("/login");
+    }
+    res.render(path.join(__dirname, "front-end", "newroom.ejs"), {user: req.user});
+})
+
+
+
 app.get("/logout", (req, res) => {
 	req.logout();
 	res.redirect("/login");
