@@ -18,6 +18,7 @@ scrollBottom();     // On page load, we want the user to be scrolled to the bott
 form.addEventListener('submit', (e) => {
     e.preventDefault(); // Prevents the form from reloading page (default behaviour)
     if (input.value) {
+        console.log("oki doki");
         // This emits a "chat_message" event to a certain room, which we define and handle below and on back-end
         socket.emit('chat_message', userId, username, input.value, room);
         input.value = '';

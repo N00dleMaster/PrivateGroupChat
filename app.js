@@ -196,7 +196,6 @@ app.get("/app/rooms/:id", async (req, res) => {
 
     // First, we'll get all the rooms the user has associated with their account.
     const user_rooms = await db.getRooms(req.user._id); // custom method in our dbmethods file.
-    console.log("user rooms is " + user_rooms);
 
     // Then, we'll check if the user is in the room they are trying to access. If not, redirect.
     // room "1" is accessible by everyone; this is the global chat.
@@ -273,7 +272,7 @@ io.on("connection", socket => {
                 } else {
                     // io.emit() emits information to *all* the connected sockets. This is then
                     // handled *again* on the client side. (see index.html)
-                    io.to(room).emit("chat_message", authorId, author, res.rows[0]._id, msg);
+                    io.to(room).emit("chat_message", authorId, author, res[0]._id, msg);
                 }
             }
         );
