@@ -10,8 +10,8 @@ scrollBottom();     // On page load, we want the user to be scrolled to the bott
 
 
 
-// Note: See our chat.ejs file in order to understand where we 
-//       got the values for username, and userId.
+// Note: See our chat.ejs file in order to understand where we got 
+//       the values for username, user id, pfp, colour, and room id.
 
 // ==================================== EVENT LISTENERS ====================================
 // For sending message
@@ -33,7 +33,7 @@ document.querySelectorAll(".delete").forEach((btn) => {
 
 // ==================================== SOCKET.IO EVENTS ====================================
 // See the app.js file for the backend handling of each event
-let room = 1; // This is the room we join on page load.
+
 
 // On connection, we do this:
 socket.on("connect", () => {
@@ -42,6 +42,7 @@ socket.on("connect", () => {
 
 // On a chat message event, we do this:
 socket.on("chat_message", (authorId, author, msgId, msg) => {
+    // just a note that the "room" constant was passed to the ejs file from the server.
     createMsg(msg, msgId, author, room);
     scrollBottom()
 });

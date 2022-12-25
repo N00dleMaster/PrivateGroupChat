@@ -214,7 +214,7 @@ app.get("/app/rooms/:id", async (req, res) => {
     db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message FROM users JOIN messages ON users._id=messages.authorid WHERE room_id=$1;",
     [req.params.id], (err, dbRes) => {
         res.render(path.join(__dirname, "front-end", "chat.ejs"), 
-            {msgs: dbRes, rooms: user_rooms, user: req.user});
+            {msgs: dbRes, rooms: user_rooms, room: req.params.id, user: req.user});
     })
 })
 
@@ -266,7 +266,7 @@ io.on("connection", socket => {
         // message to our database!!!! Epic.
         db.interact(
             "INSERT INTO messages (authorid, authorname, message, room_id) VALUES ($1, $2, $3, $4) RETURNING *",
-            [authorId, author, msg, 1], (err, res) => {
+            [authorId, author, msg, room], (err, res) => {
                 if(err) {
                     console.log(err);
                 } else {
