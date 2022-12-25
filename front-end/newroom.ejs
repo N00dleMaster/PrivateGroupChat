@@ -7,14 +7,19 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="../../css/global.css">
-        <link rel="stylesheet" type="text/css" href="../../css/form.css">
+        <link rel="stylesheet" type="text/css" href="../../css/forms.css">
     </head>
     <body>
         
 
         <h1>Create new room</h1>
+        <h4> <%= status %> </h4>
 
-            
+
+        <form action="/app/newroom" method="POST" id="form">
+            <input placeholder="Room name" name="roomname" type="text">
+            <button>Create room</button>
+        </form>
 
 
 

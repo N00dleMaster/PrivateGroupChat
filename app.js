@@ -243,7 +243,15 @@ app.get("/app/newroom", (req, res) => {
     if(!req.user) {
         res.redirect("/login");
     }
-    res.render(path.join(__dirname, "front-end", "newroom.ejs"), {user: req.user});
+    res.render(path.join(__dirname, "front-end", "newroom.ejs"), {user: req.user, status: req.flash("newroom_message")});
+})
+app.post("/app/newroom", (req, res) => {
+    if(db.addRoom(req.user._id, req.body.roomname)) { // In other words, if successful
+        res.redirect("/app/rooms/1");
+    } else {
+        req.flash("newroom_message", "There was some error creating the room.");
+        res.redirect("/app/newroom");
+    }
 })
 
 

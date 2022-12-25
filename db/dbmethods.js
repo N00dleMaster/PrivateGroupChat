@@ -57,4 +57,17 @@ module.exports = {                      // This is our interact method we're exp
             return null;
         }
     },
-  }
+
+    addRoom: async (userId, roomName) => {
+        try {
+            const newroom = await client.any("INSERT INTO rooms (name) VALUES($1) RETURNING *;", [roomName]);
+            await client.none("INSERT INTO room_members (room_id, user_id) VALUES($1, $2);", [newroom[0]._id, userId]);
+            return true;
+        } catch (e) {
+            console.log("error adding room");
+            console.log(e);
+            return false;
+        }
+    }
+
+}
