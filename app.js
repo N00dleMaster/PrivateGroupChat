@@ -211,18 +211,11 @@ app.get("/app/rooms/:id", async (req, res) => {
         res.redirect("/app/rooms/1");
     }
 
-    console.log(user_rooms);
-
     // Query our db for all messages, and then pass this into our index.ejs file as a JSON obj.
     db.interact("SELECT users.pfp, users.colour, users.username, messages.authorid, messages._id, messages.message FROM users JOIN messages ON users._id=messages.authorid WHERE room_id=$1;",
     [req.params.id], (err, dbRes) => {
-        if(err) {
-            console.log(err);
-        } else {
-            console.log("Successfully loaded messages.");
-            res.render(path.join(__dirname, "front-end", "chat.ejs"), 
-                {msgs: dbRes, rooms: user_rooms, user: req.user});
-        }
+        res.render(path.join(__dirname, "front-end", "chat.ejs"), 
+            {msgs: dbRes, rooms: user_rooms, user: req.user});
     })
 })
 
