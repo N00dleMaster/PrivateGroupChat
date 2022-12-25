@@ -12,10 +12,14 @@
 
 /* Will wrap both our sidebar (to be added) and our messages */
 #contentWrapper {
-    width: 95%;
-    margin-left: 2.5%;
+    width: 100%;
+    margin-right: 2.5%;
     height: calc(100% - 5.7rem);
+    display: flex;
+    flex-direction: row;
 }
+
+
 
 /* Where our messages go */
 .messages {
@@ -39,6 +43,9 @@
     background-color:#660708;
     border-radius: 10px;
 }
+
+
+
 
 /* Styling for each individual message */
 .messageAuthor{
@@ -71,6 +78,10 @@
     word-wrap: break-word;
 }
 
+
+
+
+
 /* For the little hover thingy we have on each of our messages */
 .options {
     display: none;
@@ -102,6 +113,33 @@
     color: #A4161A;
 }
 
+
+
+/* The sidebar */
+.sidebar {
+    height: 100%;
+    width: 15%;
+    padding: 0;
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    border-right: 2px solid #161A1D;
+}
+.sidebarHeader {
+    list-style: none;
+}
+.sidebarChatroom {
+    list-style: none;
+    border-bottom: 2px solid #161A1D;
+    margin-right: 1rem;
+}
+.sidebarChatroom a {
+    text-decoration: none;
+    color: white;
+}
+
+
+
 /* Misc. */
 .private {
     display: none;
@@ -110,6 +148,9 @@
     font-size: 1.2rem;
     color: #660708;
 }
+
+
+
 
 
 /* Styling for the form */

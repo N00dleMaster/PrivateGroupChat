@@ -20,13 +20,16 @@
             <!-- This'll contain all the chatrooms the user has available. -->
             <ul class="sidebar">
                 <li class="sidebarHeader">
-                    <h2>Chatrooms</h2>
-                    <a href="/users/<%=user._id%>"><i class="fas fa-cogs"></i></a>
+                    <h2>Your Rooms</h2>
+                </li>
+                <li class="sidebarChatroom">
+                    <a href="/app/rooms/1">
+                        <p class="chatroomName">Global</p>
+                    </a>
                 </li>
                 <% rooms.forEach(chatroom => { %>
                     <li class="sidebarChatroom">
-                        <a href="/chat/<%=chatroom._id%>">
-                            <img src="<%=chatroom.pfp%>" alt="pfp" class="pfp">
+                        <a href="/app/rooms/<%=chatroom._id%>">
                             <p class="chatroomName"><%=chatroom.name%></p>
                         </a>
                     </li>
