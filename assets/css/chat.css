@@ -1,3 +1,10 @@
+html, body {
+    padding:0;
+    margin:0;
+}
+
+
+
 /* A menu bar along the top for contextual info and settings shortcut */
 #menu {
     width: 100%;
@@ -26,12 +33,19 @@
 
 
 
+
 /* Where our messages go */
+#mainDisplay {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 .messages {
     width: 100%;
     height: 100%;
     overflow-y: scroll;
     padding: 0;
+    position: relative;
 }
 .messages li {
     box-sizing: border-box;
@@ -148,7 +162,7 @@
 
 
 /* Styling for the form */
-#form {
+#messaging {
     width: 95%;
     height: 2.7rem; 
     display: flex;
@@ -175,4 +189,39 @@
     border: 3px solid #660708;
     background-color: #A4161A;
     color: white;
+}
+
+
+
+/* For the "add user button and subsequent form" */
+.ohwowlookitsgone {
+    /* display: none; */
+}
+#addUserFormContainer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    background-color: rgba(0,0,0,0.5);
+}
+#form {
+    border:3px dashed #660708;
+    width: 30%;
+    position: relative;
+    padding: 1rem 3rem 3rem 3rem;
+    border-radius: 1rem;
+    background-color:#161A1D;
+}
+#form #close {
+    position: absolute;
+    top: 0;
+    right: 0.2rem;
+    color: rgb(77, 77, 77);
+    background-color: transparent;
+    width: max-content;
+    height: max-content;
+    border: none;
 }

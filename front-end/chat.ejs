@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="../../css/global.css">
         <link rel="stylesheet" type="text/css" href="../../css/chat.css">
+        <link rel="stylesheet" type="text/css" href="../../css/forms.css">
     </head>
     <body> 
         <div id="menu">
@@ -15,6 +16,20 @@
             <a class="menu--item" href="/logout"><i class="fas fa-sign-out-alt"></i></a>
             <a class="menu--item" href="/app/newroom"><i class="fas fa-plus"></i></a>
         </div>
+
+        <!-- To add a new user to the room, displayed if we aren't in general -->
+        <% if(room != 1) { %>
+            <div id="addUserFormContainer" class="ohwowlookitsgone">
+                <form id="form">
+                    <h1>Add User</h1>
+                    <button id="close"><i class="fas fa-times"></i></button>
+                    <input  class="addUserForm--input" type="text" name="username" id="addUserInput" placeholder="Username">
+                    <button class="addUserForm--btn">Add User</button>
+                </form>
+            </div>
+        <% } %>
+
+
 
         <!-- This'll contain both our sidebar showing all chatrooms the user has available and the actual current chatroom. -->
         <div id="contentWrapper">
@@ -38,31 +53,38 @@
                 <% }) %>
             </ul>
 
-            <!-- Right now just append all the messages like below but without the distinction between private and general -->
-            <ul class="messages">
-                <% msgs.forEach(msg => { %>
-                    <li>
-                        <img src="<%=msg.pfp%>" alt="pfp" class="pfp">
-                        <div class="messageDiv">
-                            <span>
-                                <p style="color:<%=msg.colour%>;"class="messageAuthor"><%=msg.username%></p>
-                                <% if (msg.authorid == user._id) { %>
-                                    <div class="options">
-                                        <p><%=msg._id%></p>
-                                        <button class="delete"><i class="fas fa-trash-alt"></i></button>
-                                    </div>
-                                <% } %>
-                            </span>
-                            <p class="messageContent"><%=msg.message%></p>
-                        </div>
-                    </li>
-                <% }) %>
-            </ul>
 
+            
+            <!-- Right now just append all the messages like below but without the distinction between private and general -->
+            <div id="mainDisplay">
+                <!-- To add a new user to the room, displayed if we aren't in general -->
+                <% if(room != 1) { %>
+                    <button class="addUserBtn"><i class="fas fa-user-plus"></i></button>
+                <% } %>
+                <ul class="messages">
+                    <% msgs.forEach(msg => { %>
+                        <li>
+                            <img src="<%=msg.pfp%>" alt="pfp" class="pfp">
+                            <div class="messageDiv">
+                                <span>
+                                    <p style="color:<%=msg.colour%>;"class="messageAuthor"><%=msg.username%></p>
+                                    <% if (msg.authorid == user._id) { %>
+                                        <div class="options">
+                                            <p><%=msg._id%></p>
+                                            <button class="delete"><i class="fas fa-trash-alt"></i></button>
+                                        </div>
+                                    <% } %>
+                                </span>
+                                <p class="messageContent"><%=msg.message%></p>
+                            </div>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
         </div>
 
         
-        <form id="form" action="">
+        <form id="messaging" action="">
             <input id="input" autocomplete="off"/>
             <button id="send">Send</button>
         </form>
